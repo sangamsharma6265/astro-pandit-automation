@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 from flask import Flask, request, jsonify
 import gspread
@@ -13,6 +14,13 @@ from dasha_generator import DashaGenerator
 from chart_visualizer import VedicGridChartVisualizer
 
 app = Flask(__name__)
+
+# --- RENDER/CLOUD CREDENTIALS FIX (Yeh naya joda hai) ---
+CREDENTIALS_DATA = os.environ.get("CREDENTIALS_JSON")
+if CREDENTIALS_DATA:
+    with open("credentials.json", "w") as f:
+        f.write(CREDENTIALS_DATA)
+# ---------------------------------------------------------
 
 # 1. Secure Absolute Path & Setup
 BASE_DIR = Path(__file__).resolve().parent
@@ -147,4 +155,4 @@ Instructions: Explain in simple Hinglish (conversational Hindi in English letter
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=7860)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
