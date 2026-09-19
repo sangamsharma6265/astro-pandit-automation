@@ -1,0 +1,27 @@
+========================================
+   KUNDALI REPORT FACTORY - CLIENT REPORT
+========================================
+Client Name : Rahul
+Birth Date  : 1998-10-15
+Birth Time  : 14:30
+Location    : Delhi (Lat: 28.6139, Lng: 77.209)
+----------------------------------------
+
+[+] PLANETARY POSITIONS & HOUSE PLACEMENTS:
+  • Sun       : Lib |  21.80° | House: Eighth
+  • Moon      : Leo |  26.13° | House: Seventh
+  • Mercury   : Sco |   5.08° | House: Ninth
+  • Venus     : Lib |  17.99° | House: Eighth
+  • Mars      : Vir |   4.79° | House: Seventh
+  • Jupiter   : Pis |  19.57° | House: First
+  • Saturn    : Tau |   0.83° | House: Third
+  • Uranus    : Aqu |   8.81° | House: Twelfth
+  • Neptune   : Cap |  29.39° | House: Twelfth
+  • Pluto     : Sag |   6.26° | House: Tenth
+
+========================================
+[+] AI PROMPT INSTRUCTION FOR INTERPRETATION:
+Using the exact planetary positions and houses above, generate a detailed, 
+professional astrological consultation report covering personality, career, 
+and relationships for this client. Do not change any planetary degrees or houses.
+========================================

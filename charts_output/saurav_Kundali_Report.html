@@ -1,0 +1,480 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Astro Pandit - Professional Vedic Kundali Report</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background-color: #0b0f19;
+                    color: #f8fafc;
+                    margin: 0;
+                    padding: 40px 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .report-container {
+                    width: 100%;
+                    max-width: 850px;
+                    background: #111827;
+                    padding: 40px;
+                    border-radius: 20px;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+                    border: 2px solid #fbbf24;
+                }
+                header {
+                    text-align: center;
+                    border-bottom: 2px solid #374151;
+                    padding-bottom: 25px;
+                    margin-bottom: 30px;
+                }
+                header h1 { color: #fbbf24; margin: 0 0 10px 0; font-size: 28px; letter-spacing: 1.5px; }
+                header p { color: #94a3b8; margin: 5px 0; font-size: 15px; }
+                
+                .section-title {
+                    color: #38bdf8;
+                    border-left: 4px solid #38bdf8;
+                    padding-left: 12px;
+                    margin-top: 40px;
+                    margin-bottom: 20px;
+                    font-size: 20px;
+                    letter-spacing: 0.5px;
+                }
+                
+                .chart-section {
+                    text-align: center;
+                    background: #0f172a;
+                    padding: 25px;
+                    border-radius: 12px;
+                    border: 1px solid #374151;
+                    margin-bottom: 30px;
+                }
+                
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background: #0f172a;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    margin-bottom: 30px;
+                    border: 1px solid #374151;
+                }
+                th, td {
+                    padding: 12px 15px;
+                    text-align: left;
+                    border-bottom: 1px solid #1e293b;
+                }
+                th {
+                    background: #1e293b;
+                    color: #fbbf24;
+                    font-weight: 600;
+                }
+                td { color: #e2e8f0; font-size: 14px; }
+                tr:hover { background: #1a2234; }
+                
+                .yoga-card {
+                    background: #0f172a;
+                    border: 1px solid #374151;
+                    border-radius: 10px;
+                    padding: 20px;
+                    margin-bottom: 15px;
+                }
+                .yoga-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+                }
+                .yoga-header h3 { margin: 0; color: #fbbf24; font-size: 17px; }
+                .status-badge {
+                    padding: 4px 10px;
+                    border-radius: 20px;
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: #fff;
+                }
+                .yoga-card p { margin: 6px 0; color: #94a3b8; font-size: 14px; line-height: 1.5; }
+                .yoga-card b { color: #e2e8f0; }
+                
+                .dasha-box, .prompt-box {
+                    background: #0f172a;
+                    border: 1px solid #374151;
+                    border-radius: 10px;
+                    padding: 15px;
+                    overflow-x: auto;
+                    font-family: monospace;
+                    color: #cbd5e1;
+                    font-size: 13px;
+                    white-space: pre-wrap;
+                }
+                .prompt-box {
+                    border: 1px dashed #38bdf8;
+                    color: #38bdf8;
+                    margin-bottom: 15px;
+                }
+                
+                footer {
+                    text-align: center;
+                    margin-top: 40px;
+                    padding-top: 20px;
+                    border-top: 1px solid #374151;
+                    color: #64748b;
+                    font-size: 13px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="report-container">
+                <header>
+                    <h1>🔮 ASTRO PANDIT - PROFESSIONAL KUNDALI REPORT 🔮</h1>
+                    <p>Client Name: <b>saurav</b> | Birth: 2004-06-15 06:40</p>
+                    <p>Location: <b>Delhi</b> | Zodiac Mode: <b>Vedic Sidereal (Lahiri Ayanamsa)</b></p>
+                </header>
+
+                <div class="section-title">Vedic Planetary House Diagram (North Indian Chart)</div>
+                <div class="chart-section">
+                    <svg width="450" height="450" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="500" height="500" fill="#0f172a" rx="10"/>
+                        <rect x="50" y="50" width="400" height="400" fill="none" stroke="#fbbf24" stroke-width="3"/>
+                        <line x1="50" y1="50" x2="450" y2="450" stroke="#fbbf24" stroke-width="2"/>
+                        <line x1="450" y1="50" x2="50" y2="450" stroke="#fbbf24" stroke-width="2"/>
+                        <line x1="250" y1="50" x2="450" y2="250" stroke="#fbbf24" stroke-width="2"/>
+                        <line x1="450" y1="250" x2="250" y2="450" stroke="#fbbf24" stroke-width="2"/>
+                        <line x1="250" y1="450" x2="50" y2="250" stroke="#fbbf24" stroke-width="2"/>
+                        <line x1="50" y1="250" x2="250" y2="50" stroke="#fbbf24" stroke-width="2"/>
+
+                        <!-- House Numbers -->
+                        <text x="250" y="75" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+                        <text x="110" y="75" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">12</text>
+                        <text x="75" y="145" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">11</text>
+                        <text x="75" y="255" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">10</text>
+                        <text x="75" y="365" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">9</text>
+                        <text x="110" y="435" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">8</text>
+                        <text x="250" y="435" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">7</text>
+                        <text x="390" y="435" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">6</text>
+                        <text x="425" y="365" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">5</text>
+                        <text x="425" y="255" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">4</text>
+                        <text x="425" y="145" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">3</text>
+                        <text x="390" y="75" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">2</text>
+
+                        <!-- Planets -->
+                        <text font-size="12" font-family="monospace" text-anchor="middle"><tspan x="250" y="121" fill="#fde047" font-weight="bold">MAR</tspan><tspan x="250" y="139" fill="#fde047" font-weight="bold">SAT</tspan></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"><tspan x="405" y="140" fill="#fde047" font-weight="bold">JUP</tspan></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"><tspan x="405" y="360" fill="#fde047" font-weight="bold">KET</tspan></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"><tspan x="95" y="131" fill="#fde047" font-weight="bold">MOO</tspan><tspan x="95" y="149" fill="#fde047" font-weight="bold">RAH</tspan></text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle"><tspan x="140" y="77" fill="#fde047" font-weight="bold">SUN</tspan><tspan x="140" y="95" fill="#fde047" font-weight="bold">MER</tspan><tspan x="140" y="113" fill="#fde047" font-weight="bold">VEN</tspan></text>
+                    </svg>
+                </div>
+
+                <div class="section-title">Planetary Positions & House Placements</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Planet</th>
+                            <th>Zodiac Sign</th>
+                            <th>Degree</th>
+                            <th>House</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                <tr>
+                    <td><b>Sun</b></td>
+                    <td>Gem</td>
+                    <td>0.36°</td>
+                    <td>House Twelfth</td>
+                </tr>
+            
+                <tr>
+                    <td><b>Moon</b></td>
+                    <td>Ari</td>
+                    <td>29.87°</td>
+                    <td>House Eleventh</td>
+                </tr>
+            
+                <tr>
+                    <td><b>Mars</b></td>
+                    <td>Can</td>
+                    <td>0.53°</td>
+                    <td>House First</td>
+                </tr>
+            
+                <tr>
+                    <td><b>Mercury</b></td>
+                    <td>Tau</td>
+                    <td>25.61°</td>
+                    <td>House Twelfth</td>
+                </tr>
+            
+                <tr>
+                    <td><b>Jupiter</b></td>
+                    <td>Leo</td>
+                    <td>17.40°</td>
+                    <td>House Third</td>
+                </tr>
+            
+                <tr>
+                    <td><b>Venus</b></td>
+                    <td>Tau</td>
+                    <td>19.98°</td>
+                    <td>House Twelfth</td>
+                </tr>
+            
+                <tr>
+                    <td><b>Saturn</b></td>
+                    <td>Gem</td>
+                    <td>19.88°</td>
+                    <td>House First</td>
+                </tr>
+            
+                <tr>
+                    <td><b>Rahu</b></td>
+                    <td>Ari</td>
+                    <td>16.74°</td>
+                    <td>House Eleventh</td>
+                </tr>
+            
+                <tr>
+                    <td><b>Ketu</b></td>
+                    <td>Lib</td>
+                    <td>16.74°</td>
+                    <td>House Fifth</td>
+                </tr>
+            
+                    </tbody>
+                </table>
+
+                <div class="section-title">Detailed Dosh & Yoga Analysis</div>
+                
+                <div class="yoga-card">
+                    <div class="yoga-header">
+                        <h3>Manglik</h3>
+                        <span class="status-badge" style="background: #ef4444;">DETECTED (Mars in House 1)</span>
+                    </div>
+                    <p><b>Rule:</b> Mars (Mangal) placed in 1st, 4th, 7th, 8th, or 12th house from Ascendant/Moon.</p>
+                    <p><b>Reason:</b> Mars is physically located in House 1, falling under the Manglik threshold.</p>
+                    <p><b>Impact:</b> Can cause high energy, aggressiveness, or potential friction/delays in marital harmony and partnerships if remedies are ignored.</p>
+                </div>
+            
+                <div class="yoga-card">
+                    <div class="yoga-header">
+                        <h3>Budhaditya</h3>
+                        <span class="status-badge" style="background: #ef4444;">DETECTED (Conjunct in House 12)</span>
+                    </div>
+                    <p><b>Rule:</b> Sun and Mercury conjunct (placed together in the exact same house).</p>
+                    <p><b>Reason:</b> Both Sun and Mercury occupy House 12 together.</p>
+                    <p><b>Impact:</b> Grants sharp intellect, excellent communication skills, strong analytical abilities, and success in business, writing, or advisory roles.</p>
+                </div>
+            
+                <div class="yoga-card">
+                    <div class="yoga-header">
+                        <h3>Gajakesari</h3>
+                        <span class="status-badge" style="background: #ef4444;">Not Detected</span>
+                    </div>
+                    <p><b>Rule:</b> Moon and Jupiter placed in Kendra houses (1, 4, 7, 10) relative to each other or in the same sign.</p>
+                    <p><b>Reason:</b> Angular distance between Moon and Jupiter does not form a Kendra aspect.</p>
+                    <p><b>Impact:</b> Standard wealth and wisdom progression.</p>
+                </div>
+            
+                <div class="yoga-card">
+                    <div class="yoga-header">
+                        <h3>Dhana</h3>
+                        <span class="status-badge" style="background: #ef4444;">Moderate Wealth Flow</span>
+                    </div>
+                    <p><b>Rule:</b> Concentration of multiple wealth-karaka planets in auspicious wealth houses (2nd, 5th, 9th, 11th).</p>
+                    <p><b>Reason:</b> Only 1 planet(s) found in wealth houses.</p>
+                    <p><b>Impact:</b> Balanced financial flow; wealth accumulation requires disciplined savings and careful investment planning.</p>
+                </div>
+            
+                <div class="yoga-card">
+                    <div class="yoga-header">
+                        <h3>Raja Yog</h3>
+                        <span class="status-badge" style="background: #ef4444;">Weak / Standard Formation</span>
+                    </div>
+                    <p><b>Rule:</b> High concentration of planets in Kendra (1, 4, 7, 10) and Trikona (1, 5, 9) leadership houses.</p>
+                    <p><b>Reason:</b> Only 2 planets are placed in Kendra/Trikona houses.</p>
+                    <p><b>Impact:</b> Progress in career comes through steady, consistent effort rather than sudden authoritative leaps.</p>
+                </div>
+            
+                <div class="yoga-card">
+                    <div class="yoga-header">
+                        <h3>Vipreet</h3>
+                        <span class="status-badge" style="background: #ef4444;">Not Detected</span>
+                    </div>
+                    <p><b>Rule:</b> Malefic planets (like Saturn/Mars) occupying Dusthana houses (6th, 8th, or 12th).</p>
+                    <p><b>Reason:</b> Required heavy malefic configuration inside 6th, 8th, or 12th houses is incomplete.</p>
+                    <p><b>Impact:</b> No special sudden reversal effects.</p>
+                </div>
+            
+                <div class="yoga-card">
+                    <div class="yoga-header">
+                        <h3>Sade Sati</h3>
+                        <span class="status-badge" style="background: #ef4444;">ACTIVE (Phase 1)</span>
+                    </div>
+                    <p><b>Rule:</b> Saturn transiting through the 12th, 1st, or 2nd sign relative to the natal Moon sign.</p>
+                    <p><b>Reason:</b> Real-time Transit Saturn (Pis) is in the 12th sign from natal Moon (Ari).</p>
+                    <p><b>Impact:</b> May bring minor sleep disturbances, increased expenditure, or mental restlessness requiring careful financial planning.</p>
+                </div>
+            
+
+                <div class="section-title">Vimshottari Mahadasha & Antardasha Timeline (100-Year)</div>
+                <div class="dasha-box">
+                    MAHADASHA / ANTARDASHA         | START DATE   | END DATE    
+------------------------------------------------------------
+► Sun Mahadasha ( 4.6 Yrs)          | 15 Jun 2004  | 05 Jan 2009 
+    • Sun -> Sun Antardasha    | 15 Jun 2004  | 02 Oct 2004 
+    • Sun -> Moon Antardasha    | 02 Oct 2004  | 02 Apr 2005 
+    • Sun -> Mars Antardasha    | 02 Apr 2005  | 07 Aug 2005 
+    • Sun -> Rahu Antardasha    | 07 Aug 2005  | 01 Jul 2006 
+    • Sun -> Jupiter Antardasha    | 01 Jul 2006  | 19 Apr 2007 
+    • Sun -> Saturn Antardasha    | 19 Apr 2007  | 30 Mar 2008 
+    • Sun -> Mercury Antardasha    | 30 Mar 2008  | 03 Feb 2009 
+    • Sun -> Ketu Antardasha    | 03 Feb 2009  | 10 Jun 2009 
+    • Sun -> Venus Antardasha    | 10 Jun 2009  | 10 Jun 2010 
+------------------------------------------------------------
+► Moon Mahadasha (10.0 Yrs)          | 05 Jan 2009  | 05 Jan 2019 
+    • Moon -> Moon Antardasha    | 05 Jan 2009  | 05 Nov 2009 
+    • Moon -> Mars Antardasha    | 05 Nov 2009  | 06 Jun 2010 
+    • Moon -> Rahu Antardasha    | 06 Jun 2010  | 05 Dec 2011 
+    • Moon -> Jupiter Antardasha    | 05 Dec 2011  | 05 Apr 2013 
+    • Moon -> Saturn Antardasha    | 05 Apr 2013  | 04 Nov 2014 
+    • Moon -> Mercury Antardasha    | 04 Nov 2014  | 04 Apr 2016 
+    • Moon -> Ketu Antardasha    | 04 Apr 2016  | 03 Nov 2016 
+    • Moon -> Venus Antardasha    | 03 Nov 2016  | 04 Jul 2018 
+    • Moon -> Sun Antardasha    | 04 Jul 2018  | 02 Jan 2019 
+------------------------------------------------------------
+► Mars Mahadasha ( 7.0 Yrs)          | 05 Jan 2019  | 04 Jan 2026 
+    • Mars -> Mars Antardasha    | 05 Jan 2019  | 03 Jun 2019 
+    • Mars -> Rahu Antardasha    | 03 Jun 2019  | 20 Jun 2020 
+    • Mars -> Jupiter Antardasha    | 20 Jun 2020  | 26 May 2021 
+    • Mars -> Saturn Antardasha    | 26 May 2021  | 04 Jul 2022 
+    • Mars -> Mercury Antardasha    | 04 Jul 2022  | 01 Jul 2023 
+    • Mars -> Ketu Antardasha    | 01 Jul 2023  | 27 Nov 2023 
+    • Mars -> Venus Antardasha    | 27 Nov 2023  | 26 Jan 2025 
+    • Mars -> Sun Antardasha    | 26 Jan 2025  | 02 Jun 2025 
+    • Mars -> Moon Antardasha    | 02 Jun 2025  | 01 Jan 2026 
+------------------------------------------------------------
+► Rahu Mahadasha (18.0 Yrs)          | 04 Jan 2026  | 04 Jan 2044 
+    • Rahu -> Rahu Antardasha    | 04 Jan 2026  | 16 Sep 2028 
+    • Rahu -> Jupiter Antardasha    | 16 Sep 2028  | 09 Feb 2031 
+    • Rahu -> Saturn Antardasha    | 09 Feb 2031  | 15 Dec 2033 
+    • Rahu -> Mercury Antardasha    | 15 Dec 2033  | 03 Jul 2036 
+    • Rahu -> Ketu Antardasha    | 03 Jul 2036  | 21 Jul 2037 
+    • Rahu -> Venus Antardasha    | 21 Jul 2037  | 20 Jul 2040 
+    • Rahu -> Sun Antardasha    | 20 Jul 2040  | 13 Jun 2041 
+    • Rahu -> Moon Antardasha    | 13 Jun 2041  | 12 Dec 2042 
+    • Rahu -> Mars Antardasha    | 12 Dec 2042  | 30 Dec 2043 
+------------------------------------------------------------
+► Jupiter Mahadasha (16.0 Yrs)          | 04 Jan 2044  | 04 Jan 2060 
+    • Jupiter -> Jupiter Antardasha    | 04 Jan 2044  | 21 Feb 2046 
+    • Jupiter -> Saturn Antardasha    | 21 Feb 2046  | 03 Sep 2048 
+    • Jupiter -> Mercury Antardasha    | 03 Sep 2048  | 09 Dec 2050 
+    • Jupiter -> Ketu Antardasha    | 09 Dec 2050  | 14 Nov 2051 
+    • Jupiter -> Venus Antardasha    | 14 Nov 2051  | 15 Jul 2054 
+    • Jupiter -> Sun Antardasha    | 15 Jul 2054  | 03 May 2055 
+    • Jupiter -> Moon Antardasha    | 03 May 2055  | 01 Sep 2056 
+    • Jupiter -> Mars Antardasha    | 01 Sep 2056  | 07 Aug 2057 
+    • Jupiter -> Rahu Antardasha    | 07 Aug 2057  | 31 Dec 2059 
+------------------------------------------------------------
+► Saturn Mahadasha (19.0 Yrs)          | 04 Jan 2060  | 03 Jan 2079 
+    • Saturn -> Saturn Antardasha    | 04 Jan 2060  | 06 Jan 2063 
+    • Saturn -> Mercury Antardasha    | 06 Jan 2063  | 15 Sep 2065 
+    • Saturn -> Ketu Antardasha    | 15 Sep 2065  | 24 Oct 2066 
+    • Saturn -> Venus Antardasha    | 24 Oct 2066  | 23 Dec 2069 
+    • Saturn -> Sun Antardasha    | 23 Dec 2069  | 04 Dec 2070 
+    • Saturn -> Moon Antardasha    | 04 Dec 2070  | 04 Jul 2072 
+    • Saturn -> Mars Antardasha    | 04 Jul 2072  | 12 Aug 2073 
+    • Saturn -> Rahu Antardasha    | 12 Aug 2073  | 17 Jun 2076 
+    • Saturn -> Jupiter Antardasha    | 17 Jun 2076  | 29 Dec 2078 
+------------------------------------------------------------
+► Mercury Mahadasha (17.0 Yrs)          | 03 Jan 2079  | 03 Jan 2096 
+    • Mercury -> Mercury Antardasha    | 03 Jan 2079  | 31 May 2081 
+    • Mercury -> Ketu Antardasha    | 31 May 2081  | 28 May 2082 
+    • Mercury -> Venus Antardasha    | 28 May 2082  | 27 Mar 2085 
+    • Mercury -> Sun Antardasha    | 27 Mar 2085  | 31 Jan 2086 
+    • Mercury -> Moon Antardasha    | 31 Jan 2086  | 02 Jul 2087 
+    • Mercury -> Mars Antardasha    | 02 Jul 2087  | 28 Jun 2088 
+    • Mercury -> Rahu Antardasha    | 28 Jun 2088  | 15 Jan 2091 
+    • Mercury -> Jupiter Antardasha    | 15 Jan 2091  | 21 Apr 2093 
+    • Mercury -> Saturn Antardasha    | 21 Apr 2093  | 30 Dec 2095 
+------------------------------------------------------------
+► Ketu Mahadasha ( 7.0 Yrs)          | 03 Jan 2096  | 03 Jan 2103 
+    • Ketu -> Ketu Antardasha    | 03 Jan 2096  | 31 May 2096 
+    • Ketu -> Venus Antardasha    | 31 May 2096  | 31 Jul 2097 
+    • Ketu -> Sun Antardasha    | 31 Jul 2097  | 05 Dec 2097 
+    • Ketu -> Moon Antardasha    | 05 Dec 2097  | 06 Jul 2098 
+    • Ketu -> Mars Antardasha    | 06 Jul 2098  | 02 Dec 2098 
+    • Ketu -> Rahu Antardasha    | 02 Dec 2098  | 20 Dec 2099 
+    • Ketu -> Jupiter Antardasha    | 20 Dec 2099  | 25 Nov 2100 
+    • Ketu -> Saturn Antardasha    | 25 Nov 2100  | 03 Jan 2102 
+    • Ketu -> Mercury Antardasha    | 03 Jan 2102  | 31 Dec 2102 
+------------------------------------------------------------
+► Venus Mahadasha (20.0 Yrs)          | 03 Jan 2103  | 03 Jan 2123 
+    • Venus -> Venus Antardasha    | 03 Jan 2103  | 04 May 2106 
+    • Venus -> Sun Antardasha    | 04 May 2106  | 04 May 2107 
+    • Venus -> Moon Antardasha    | 04 May 2107  | 01 Jan 2109 
+    • Venus -> Mars Antardasha    | 01 Jan 2109  | 03 Mar 2110 
+    • Venus -> Rahu Antardasha    | 03 Mar 2110  | 02 Mar 2113 
+    • Venus -> Jupiter Antardasha    | 02 Mar 2113  | 01 Nov 2115 
+    • Venus -> Saturn Antardasha    | 01 Nov 2115  | 31 Dec 2118 
+    • Venus -> Mercury Antardasha    | 31 Dec 2118  | 30 Oct 2121 
+    • Venus -> Ketu Antardasha    | 30 Oct 2121  | 30 Dec 2122 
+------------------------------------------------------------
+                </div>
+
+                <div class="section-title">1. Master Core Consultation Prompt (Hinglish & Simple)</div>
+                <div class="prompt-box">
+                    Act as a friendly, expert Vedic Astrologer. Analyze this birth chart for client saurav (Born: 2004-06-15, delhi):
+Planetary Positions:
+- Sun: Placed in Gem, House Twelfth
+- Moon: Placed in Ari, House Eleventh
+- Mars: Placed in Can, House First
+- Mercury: Placed in Tau, House Twelfth
+- Jupiter: Placed in Leo, House Third
+- Venus: Placed in Tau, House Twelfth
+- Saturn: Placed in Gem, House First
+- Rahu: Placed in Ari, House Eleventh
+- Ketu: Placed in Lib, House Fifth
+Yogas:
+- Manglik: DETECTED (Mars in House 1) (Can cause high energy, aggressiveness, or potential friction/delays in marital harmony and partnerships if remedies are ignored.)
+- Budhaditya: DETECTED (Conjunct in House 12) (Grants sharp intellect, excellent communication skills, strong analytical abilities, and success in business, writing, or advisory roles.)
+- Gajakesari: Not Detected (Standard wealth and wisdom progression.)
+- Dhana: Moderate Wealth Flow (Balanced financial flow; wealth accumulation requires disciplined savings and careful investment planning.)
+- Raja Yog: Weak / Standard Formation (Progress in career comes through steady, consistent effort rather than sudden authoritative leaps.)
+- Vipreet: Not Detected (No special sudden reversal effects.)
+- Sade Sati: ACTIVE (Phase 1) (May bring minor sleep disturbances, increased expenditure, or mental restlessness requiring careful financial planning.)
+
+Instructions: Explain in simple Hinglish (conversational Hindi in English letters). Cover 1st, 7th, and 10th houses simply.
+                </div>
+
+                <div class="section-title">2. Custom House Inquiry Prompt (For any other house)</div>
+                <div class="prompt-box">
+                    Act as an expert Vedic Astrologer for client saurav. Positions:
+- Sun: Placed in Gem, House Twelfth
+- Moon: Placed in Ari, House Eleventh
+- Mars: Placed in Can, House First
+- Mercury: Placed in Tau, House Twelfth
+- Jupiter: Placed in Leo, House Third
+- Venus: Placed in Tau, House Twelfth
+- Saturn: Placed in Gem, House First
+- Rahu: Placed in Ari, House Eleventh
+- Ketu: Placed in Lib, House Fifth
+Explain user's specific house inquiry in simple Hinglish.
+                </div>
+
+                <footer>
+                    Astro Pandit Automated Report Factory &bull; Powered by Lahiri Sidereal Engine
+                </footer>
+            </div>
+        </body>
+        </html>
+        

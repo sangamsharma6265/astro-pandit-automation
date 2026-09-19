@@ -1,0 +1,179 @@
+================================================================
+          🔮 ASTRO PANDIT - PROFESSIONAL KUNDALI REPORT 🔮          
+================================================================
+  Brought to you by: Astro Pandit Automated Report Factory
+----------------------------------------------------------------
+» Client Name : Rahul
+» Birth Date  : 1998-10-15 | Time: 14:30
+» Birth Place : Delhi (Lat: 28.6139, Lng: 77.209)
+» Zodiac Mode : Vedic Sidereal (LAHIRI Ayanamsa)
+================================================================
+
+[+] VEDIC PLANETARY HOUSE DIAGRAM (CHART GRID):
+----------------------------------------------------------------
+
+[North Indian Chart Layout Mapped]
+House 1 (Top Center): JUP, KET
+House 2: Empty | House 12: Empty
+
+
+----------------------------------------------------------------
+[+] VEDIC PLANETARY POSITIONS & HOUSE PLACEMENTS (ALL 9 PLANETS):
+----------------------------------------------------------------
+  • Jupiter   : Aqu |  25.73° | House: First
+  • Mars      : Leo |  10.95° | House: Seventh
+  • Mercury   : Lib |  11.25° | House: Ninth
+  • Moon      : Leo |   2.29° | House: Seventh
+  • Saturn    : Ari |   6.99° | House: Third
+  • Sun       : Vir |  27.97° | House: Eighth
+  • Rahu      : Leo |   6.54° | House: Seventh
+  • Ketu      : Aqu |   6.54° | House: First
+  • Venus     : Vir |  24.16° | House: Eighth
+
+----------------------------------------------------------------
+[+] DETAILED DOSH & YOGA ANALYSIS (RULES, REASONS & LIFE IMPACT):
+----------------------------------------------------------------
+• Manglik:
+  - Status : DETECTED (Mars in House 7)
+  - Rule   : Mars (Mangal) placed in 1st, 4th, 7th, 8th, or 12th house from Ascendant/Moon.
+  - Reason : Mars is physically located in House 7, falling under the Manglik threshold.
+  - Impact : Can cause high energy, aggressiveness, or potential friction/delays in marital harmony and partnerships if remedies are ignored.
+
+• Budhaditya:
+  - Status : Not Detected
+  - Rule   : Sun and Mercury conjunct (placed together in the exact same house).
+  - Reason : Sun and Mercury are placed in separate houses.
+  - Impact : Standard intellectual growth based on individual planetary strengths.
+
+• Gajakesari:
+  - Status : DETECTED
+  - Rule   : Moon and Jupiter placed in Kendra houses (1, 4, 7, 10) relative to each other or in the same sign.
+  - Reason : Moon (Sign: Leo) and Jupiter share a harmonious Kendra relationship.
+  - Impact : Bestows wisdom, high social reputation, financial prosperity, respect in society, and the ability to overcome major life obstacles gracefully.
+
+• Dhana:
+  - Status : Moderate Wealth Flow
+  - Rule   : Concentration of multiple wealth-karaka planets in auspicious wealth houses (2nd, 5th, 9th, 11th).
+  - Reason : Only 1 planet(s) found in wealth houses.
+  - Impact : Balanced financial flow; wealth accumulation requires disciplined savings and careful investment planning.
+
+• Raja Yog:
+  - Status : DETECTED
+  - Rule   : High concentration of planets in Kendra (1, 4, 7, 10) and Trikona (1, 5, 9) leadership houses.
+  - Reason : 4 planets reside in powerful Kendra/Trikona houses.
+  - Impact : Promotes career authority, leadership roles, public recognition, status elevation, and successful execution of major life goals.
+
+• Vipreet:
+  - Status : Not Detected
+  - Rule   : Malefic planets (like Saturn/Mars) occupying Dusthana houses (6th, 8th, or 12th).
+  - Reason : Required heavy malefic configuration inside 6th, 8th, or 12th houses is incomplete.
+  - Impact : No special sudden reversal effects.
+
+• Sade Sati:
+  - Status : NOT ACTIVE (Clear)
+  - Rule   : Saturn transiting through the 12th, 1st, or 2nd sign relative to the natal Moon sign.
+  - Reason : Transit Saturn is in Pis, while natal Moon is in Leo (Outside Sade Sati zone).
+  - Impact : Mental peace, emotional stability, and professional growth flow without heavy Saturnian restrictions.
+
+----------------------------------------------------------------
+[+] VIMSHOTTARI MAHADASHA & ANTARDASHA TIMELINE (100-YEAR TABLE):
+----------------------------------------------------------------
+MAHADASHA / ANTARDASHA         | START DATE   | END DATE    
+------------------------------------------------------------
+► Ketu Mahadasha ( 5.8 Yrs)          | 15 Oct 1998  | 01 Aug 2004 
+    • Ketu -> Ketu Antardasha    | 15 Oct 1998  | 13 Mar 1999 
+    • Ketu -> Venus Antardasha    | 13 Mar 1999  | 12 May 2000 
+    • Ketu -> Sun Antardasha    | 12 May 2000  | 16 Sep 2000 
+    • Ketu -> Moon Antardasha    | 16 Sep 2000  | 17 Apr 2001 
+    • Ketu -> Mars Antardasha    | 17 Apr 2001  | 13 Sep 2001 
+    • Ketu -> Rahu Antardasha    | 13 Sep 2001  | 01 Oct 2002 
+    • Ketu -> Jupiter Antardasha    | 01 Oct 2002  | 06 Sep 2003 
+    • Ketu -> Saturn Antardasha    | 06 Sep 2003  | 14 Oct 2004 
+    • Ketu -> Mercury Antardasha    | 14 Oct 2004  | 11 Oct 2005 
+------------------------------------------------------------
+► Venus Mahadasha (20.0 Yrs)          | 01 Aug 2004  | 01 Aug 2024 
+    • Venus -> Venus Antardasha    | 01 Aug 2004  | 01 Dec 2007 
+    • Venus -> Sun Antardasha    | 01 Dec 2007  | 30 Nov 2008 
+    • Venus -> Moon Antardasha    | 30 Nov 2008  | 31 Jul 2010 
+    • Venus -> Mars Antardasha    | 31 Jul 2010  | 30 Sep 2011 
+    • Venus -> Rahu Antardasha    | 30 Sep 2011  | 29 Sep 2014 
+    • Venus -> Jupiter Antardasha    | 29 Sep 2014  | 30 May 2017 
+    • Venus -> Saturn Antardasha    | 30 May 2017  | 29 Jul 2020 
+    • Venus -> Mercury Antardasha    | 29 Jul 2020  | 29 May 2023 
+    • Venus -> Ketu Antardasha    | 29 May 2023  | 28 Jul 2024 
+------------------------------------------------------------
+► Sun Mahadasha ( 6.0 Yrs)          | 01 Aug 2024  | 01 Aug 2030 
+    • Sun -> Sun Antardasha    | 01 Aug 2024  | 18 Nov 2024 
+    • Sun -> Moon Antardasha    | 18 Nov 2024  | 19 May 2025 
+    • Sun -> Mars Antardasha    | 19 May 2025  | 23 Sep 2025 
+    • Sun -> Rahu Antardasha    | 23 Sep 2025  | 17 Aug 2026 
+    • Sun -> Jupiter Antardasha    | 17 Aug 2026  | 05 Jun 2027 
+    • Sun -> Saturn Antardasha    | 05 Jun 2027  | 16 May 2028 
+    • Sun -> Mercury Antardasha    | 16 May 2028  | 22 Mar 2029 
+    • Sun -> Ketu Antardasha    | 22 Mar 2029  | 27 Jul 2029 
+    • Sun -> Venus Antardasha    | 27 Jul 2029  | 27 Jul 2030 
+------------------------------------------------------------
+► Moon Mahadasha (10.0 Yrs)          | 01 Aug 2030  | 31 Jul 2040 
+    • Moon -> Moon Antardasha    | 01 Aug 2030  | 01 Jun 2031 
+    • Moon -> Mars Antardasha    | 01 Jun 2031  | 31 Dec 2031 
+    • Moon -> Rahu Antardasha    | 31 Dec 2031  | 30 Jun 2033 
+    • Moon -> Jupiter Antardasha    | 30 Jun 2033  | 30 Oct 2034 
+    • Moon -> Saturn Antardasha    | 30 Oct 2034  | 30 May 2036 
+    • Moon -> Mercury Antardasha    | 30 May 2036  | 29 Oct 2037 
+    • Moon -> Ketu Antardasha    | 29 Oct 2037  | 30 May 2038 
+    • Moon -> Venus Antardasha    | 30 May 2038  | 28 Jan 2040 
+    • Moon -> Sun Antardasha    | 28 Jan 2040  | 28 Jul 2040 
+------------------------------------------------------------
+► Mars Mahadasha ( 7.0 Yrs)          | 31 Jul 2040  | 31 Jul 2047 
+    • Mars -> Mars Antardasha    | 31 Jul 2040  | 27 Dec 2040 
+    • Mars -> Rahu Antardasha    | 27 Dec 2040  | 14 Jan 2042 
+    • Mars -> Jupiter Antardasha    | 14 Jan 2042  | 20 Dec 2042 
+    • Mars -> Saturn Antardasha    | 20 Dec 2042  | 28 Jan 2044 
+    • Mars -> Mercury Antardasha    | 28 Jan 2044  | 24 Jan 2045 
+    • Mars -> Ketu Antardasha    | 24 Jan 2045  | 22 Jun 2045 
+    • Mars -> Venus Antardasha    | 22 Jun 2045  | 22 Aug 2046 
+    • Mars -> Sun Antardasha    | 22 Aug 2046  | 27 Dec 2046 
+    • Mars -> Moon Antardasha    | 27 Dec 2046  | 28 Jul 2047 
+------------------------------------------------------------
+► Rahu Mahadasha (18.0 Yrs)          | 31 Jul 2047  | 30 Jul 2065 
+    • Rahu -> Rahu Antardasha    | 31 Jul 2047  | 12 Apr 2050 
+    • Rahu -> Jupiter Antardasha    | 12 Apr 2050  | 04 Sep 2052 
+    • Rahu -> Saturn Antardasha    | 04 Sep 2052  | 11 Jul 2055 
+    • Rahu -> Mercury Antardasha    | 11 Jul 2055  | 27 Jan 2058 
+    • Rahu -> Ketu Antardasha    | 27 Jan 2058  | 14 Feb 2059 
+    • Rahu -> Venus Antardasha    | 14 Feb 2059  | 13 Feb 2062 
+    • Rahu -> Sun Antardasha    | 13 Feb 2062  | 07 Jan 2063 
+    • Rahu -> Moon Antardasha    | 07 Jan 2063  | 07 Jul 2064 
+    • Rahu -> Mars Antardasha    | 07 Jul 2064  | 25 Jul 2065 
+------------------------------------------------------------
+► Jupiter Mahadasha (16.0 Yrs)          | 30 Jul 2065  | 30 Jul 2081 
+    • Jupiter -> Jupiter Antardasha    | 30 Jul 2065  | 17 Sep 2067 
+    • Jupiter -> Saturn Antardasha    | 17 Sep 2067  | 30 Mar 2070 
+    • Jupiter -> Mercury Antardasha    | 30 Mar 2070  | 04 Jul 2072 
+    • Jupiter -> Ketu Antardasha    | 04 Jul 2072  | 09 Jun 2073 
+    • Jupiter -> Venus Antardasha    | 09 Jun 2073  | 08 Feb 2076 
+    • Jupiter -> Sun Antardasha    | 08 Feb 2076  | 26 Nov 2076 
+    • Jupiter -> Moon Antardasha    | 26 Nov 2076  | 28 Mar 2078 
+    • Jupiter -> Mars Antardasha    | 28 Mar 2078  | 03 Mar 2079 
+    • Jupiter -> Rahu Antardasha    | 03 Mar 2079  | 26 Jul 2081 
+------------------------------------------------------------
+► Saturn Mahadasha (19.0 Yrs)          | 30 Jul 2081  | 30 Jul 2100 
+    • Saturn -> Saturn Antardasha    | 30 Jul 2081  | 01 Aug 2084 
+    • Saturn -> Mercury Antardasha    | 01 Aug 2084  | 11 Apr 2087 
+    • Saturn -> Ketu Antardasha    | 11 Apr 2087  | 19 May 2088 
+    • Saturn -> Venus Antardasha    | 19 May 2088  | 19 Jul 2091 
+    • Saturn -> Sun Antardasha    | 19 Jul 2091  | 29 Jun 2092 
+    • Saturn -> Moon Antardasha    | 29 Jun 2092  | 28 Jan 2094 
+    • Saturn -> Mars Antardasha    | 28 Jan 2094  | 08 Mar 2095 
+    • Saturn -> Rahu Antardasha    | 08 Mar 2095  | 11 Jan 2098 
+    • Saturn -> Jupiter Antardasha    | 11 Jan 2098  | 25 Jul 2100 
+------------------------------------------------------------
+
+----------------------------------------------------------------
+[+] ASTROLOGER'S AI PROMPT & CONSULTATION NOTES:
+----------------------------------------------------------------
+Using the precise Vedic sidereal positions, verified yogas/doshas, and the 
+100-year Dasha timeline above, draft an expert consultation report for 
+Rahul. Map out life predictions according to active Dasha periods.
+Maintain an authoritative, uplifting, and professional Astro Pandit tone.
+================================================================
