@@ -15,12 +15,19 @@ from chart_visualizer import VedicGridChartVisualizer
 
 app = Flask(__name__)
 
-# --- RENDER/CLOUD CREDENTIALS FIX (Yeh naya joda hai) ---
+# --- RENDER/CLOUD CREDENTIALS FIX ---
 CREDENTIALS_DATA = os.environ.get("CREDENTIALS_JSON")
 if CREDENTIALS_DATA:
-    with open("credentials.json", "w") as f:
-        f.write(CREDENTIALS_DATA)
-# ---------------------------------------------------------
+    try:
+        parsed_json = json.loads(CREDENTIALS_DATA)
+        with open("credentials.json", "w") as f:
+            json.dump(parsed_json, f)
+        print("[INFO] credentials.json successfully generated from environment variable.")
+    except Exception as e:
+        print(f"[ERROR] Invalid CREDENTIALS_JSON format: {e}")
+else:
+    print("[WARNING] CREDENTIALS_JSON environment variable not found!")
+# ------------------------------------
 
 # 1. Secure Absolute Path & Setup
 BASE_DIR = Path(__file__).resolve().parent
