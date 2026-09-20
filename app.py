@@ -21,12 +21,8 @@ local_path = BASE_DIR / "credentials.json"
 
 if render_secret_path.exists():
     cred_path = render_secret_path
-    print("[INFO] Loaded credentials from Render Secret Files.")
 elif local_path.exists():
     cred_path = local_path
-    print("[INFO] Loaded credentials from local file.")
-else:
-    print("[WARNING] credentials.json not found anywhere!")
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name(str(cred_path), scope)
@@ -41,24 +37,7 @@ def get_lat_lng(city_name):
             return loc.latitude, loc.longitude
     except Exception:
         pass
-    return 28.6139, 77.2090  # Default Delhi fallback
-
-def fetch_latest_from_sheet():
-    try:
-        # Apni Google Sheet ka naam ya pehli sheet access karo
-        sheet = client.open_by_key("YOUR_GOOGLE_SHEET_ID_HERE").sheet1 # Ya sheet name
-    except Exception:
-        try:
-            # Alternate: open by name agar sheet name pata ho
-            sheet = client.open("Astro Pandit Form Responses").sheet1
-        except Exception:
-            return None
-            
-    if sheet:
-        data = sheet.get_all_records()
-        if data:
-            return data[-1] # Sabse last row (latest entry)
-    return None
+    return 28.6139, 77.2090
 
 @app.route('/')
 def home():
@@ -70,48 +49,28 @@ def webhook():
         req_data = request.get_json(silent=True) or request.form.to_dict() or request.args.to_dict() or {}
         print(f"\n[INCOMING PAYLOAD]: {req_data}")
         
-        # Agar payload khali hai, toh Google Sheet se direct latest row utha lo
-        if not req_data or len(req_data) <= 1:
-            print("[INFO] Payload empty, fetching latest row directly from Google Sheet...")
-            sheet_data = fetch_latest_from_sheet()
-            if sheet_data:
-                req_data = sheet_data
-                print(f"[SHEET FALLBACK DATA]: {req_data}")
-
-        def clean_val(val):
-            if isinstance(val, list):
-                return val[0] if val else ""
-            return str(val) if val is not None else ""
-
-        name = None
-        dob = None
-        tob = None
-        city = None
+        name = "Client"
+        dob = "1998-10-15"
+        tob = "12:00"
+        city = "Delhi"
         
         for k, v in req_data.items():
-            k_lower = str(k).lower().strip()
-            actual_val = clean_val(v)
-            print(f"[DEBUG KEY]: '{k_lower}' -> [VALUE]: '{actual_val}'")
+            k_clean = str(k).strip().lower()
+            val_clean = str(v[0] if isinstance(v, list) else v).strip()
             
-            if not actual_val:
+            if not val_clean:
                 continue
                 
-            if 'name' in k_lower:
-                name = actual_val
-            elif 'date' in k_lower or 'dob' in k_lower or ('birth' in k_lower and 'time' not in k_lower and 'location' not in k_lower):
-                dob = actual_val
-            elif 'time' in k_lower or 'tob' in k_lower:
-                tob = actual_val
-            elif 'location' in k_lower or 'city' in k_lower or 'place' in k_lower:
-                city = actual_val
+            if 'client name' in k_clean or k_clean == 'name':
+                name = val_clean
+            elif 'date of birth' in k_clean or 'dob' in k_clean or k_clean == 'date':
+                dob = val_clean
+            elif 'time of birth' in k_clean or 'tob' in k_clean or k_clean == 'time':
+                tob = val_clean
+            elif 'location of birth' in k_clean or 'location' in k_clean or 'city' in k_clean or 'place' in k_clean:
+                city = val_clean
                 
-        # Fallbacks agar phir bhi na milein
-        name = name if name else "Client"
-        dob = dob if dob else "1998-10-15"
-        tob = tob if tob else "12:00"
-        city = city if city else "Delhi"
-        
-        print(f"\n[PARSED DETAILS] Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
+        print(f"\n[PARSED DATA] Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
         
         year, month, day = 1998, 10, 15
         hour, minute = 12, 0
@@ -130,10 +89,8 @@ def webhook():
                 tob_str = str(tob).strip().upper()
                 is_pm = 'PM' in tob_str
                 is_am = 'AM' in tob_str
-                
                 time_clean = tob_str.replace('AM', '').replace('PM', '').strip()
                 parts_time = time_clean.split(':')
-                
                 if len(parts_time) >= 2:
                     hour, minute = int(parts_time[0]), int(parts_time[1])
                     if is_pm and hour < 12:
@@ -141,9 +98,9 @@ def webhook():
                     elif is_am and hour == 12:
                         hour = 0
         except Exception as parse_err:
-            print(f"[PARSING WARNING] Using defaults due to: {parse_err}")
+            print(f"[PARSING WARNING]: {parse_err}")
 
-        lat, lng = get_lat_lng(city if city else "Delhi")
+        lat, lng = get_lat_lng(city)
         
         subject = AstrologicalSubjectFactory.from_birth_data(
             name=str(name), year=year, month=month, day=day, hour=hour, minute=minute,
@@ -175,7 +132,7 @@ def webhook():
         planets_text = get_planets_text(temp_vis)
         yogas_text = "".join([f"- {k.replace('_', ' ').title()}: {v['status']} ({v['impact']})\n" for k, v in vedic_results.items()])
         
-        ai_prompt_text = f"""Act as a friendly, expert Vedic Astrologer. Analyze this birth chart for client {subject.name} (Born: {subject.year}-{subject.month:02d}-{subject.day:02d} at {hour}:{minute}, Location: {city}):
+        ai_prompt_text = f"""Act as a friendly, expert Vedic Astrologer. Analyze this birth chart for client {subject.name} (Born: {subject.year}-{subject.month:02d}-{subject.day:02d}, {city}):
 Planetary Positions:
 {planets_text}
 Yogas:

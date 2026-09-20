@@ -103,10 +103,20 @@ class VedicGridChartVisualizer:
             9:  (95,  360), 10: (130, 250), 11: (95,  140), 12: (140, 95)
         }
 
+        # Perfect adjusted coordinates to keep Rashi numbers safe inside boxes
         rashi_coords = {
-            1: (250, 75),  2: (140, 55),  3: (75, 115),  4: (130, 210),
-            5: (75, 310),  6: (140, 385), 7: (250, 330), 8: (360, 385),
-            9: (425, 310), 10: (370, 210), 11: (425, 115), 12: (360, 55)
+            1:  (250, 95),   
+            2:  (160, 80),   
+            3:  (95, 140),   
+            4:  (150, 210),  
+            5:  (95, 310),   
+            6:  (160, 370),  
+            7:  (250, 310),  
+            8:  (340, 370),  
+            9:  (405, 310),  
+            10: (350, 210), 
+            11: (405, 140), 
+            12: (340, 80)   
         }
 
         def render_house_content(h_num):
@@ -115,14 +125,13 @@ class VedicGridChartVisualizer:
             cx, cy = house_coords[h_num]
             rx, ry = rashi_coords[h_num]
             
-            # Direct valid SVG elements (no outer wrapper text tag)
-            svg_tags = f'<text x="{rx}" y="{ry}" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="middle">{r_num}</text>'
+            svg_tags = f'<text x="{rx}" y="{ry}" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">{r_num}</text>'
             
             if p_list:
                 start_y = cy - ((len(p_list) - 1) * 10)
                 for idx, p_code in enumerate(p_list):
-                    curr_y = start_y + (idx * 20)
-                    svg_tags += f'<text x="{cx}" y="{curr_y}" fill="#fde047" font-size="13" font-weight="bold" text-anchor="middle">{p_code}</text>'
+                    curr_y = start_y + (idx * 18)
+                    svg_tags += f'<text x="{cx}" y="{curr_y}" fill="#fde047" font-size="12" font-weight="bold" text-anchor="middle">{p_code}</text>'
             return svg_tags
 
         unique_planets = []
@@ -213,7 +222,6 @@ class VedicGridChartVisualizer:
                         <line x1="250" y1="450" x2="50" y2="250" stroke="#fbbf24" stroke-width="2"/>
                         <line x1="50" y1="250" x2="250" y2="50" stroke="#fbbf24" stroke-width="2"/>
 
-                        <!-- Direct SVG House Contents -->
                         {render_house_content(1)}
                         {render_house_content(2)}
                         {render_house_content(3)}
