@@ -47,13 +47,12 @@ def get_lat_lng(city_name):
 def home():
     return "Astro Pandit Instant Webhook Server is Running! 🚀"
 
-@app.route('/webhook', methods=['POST'])
+@app.route('/webhook', methods=['POST', 'GET'])
 def webhook():
     try:
-        req_data = request.get_json() or {}
+        req_data = request.get_json(silent=True) or request.form.to_dict() or request.args.to_dict() or {}
         print(f"\n[INCOMING PAYLOAD]: {req_data}")
         
-        # Helper to extract clean string value whether it's a list or string
         def clean_val(val):
             if isinstance(val, list):
                 return val[0] if val else ""
@@ -65,20 +64,25 @@ def webhook():
         city = None
         
         for k, v in req_data.items():
-            k_lower = k.lower()
+            k_lower = str(k).lower().strip()
             actual_val = clean_val(v)
+            print(f"[DEBUG KEY]: '{k_lower}' -> [VALUE]: '{actual_val}'")
+            
+            if not actual_val:
+                continue
+                
             if 'name' in k_lower:
                 name = actual_val
-            elif 'dob' in k_lower or 'birth date' in k_lower or 'date' in k_lower:
+            elif 'date' in k_lower or 'dob' in k_lower or ('birth' in k_lower and 'time' not in k_lower and 'location' not in k_lower):
                 dob = actual_val
-            elif 'tob' in k_lower or 'time' in k_lower:
+            elif 'time' in k_lower or 'tob' in k_lower:
                 tob = actual_val
-            elif 'city' in k_lower or 'place' in k_lower or 'location' in k_lower:
+            elif 'location' in k_lower or 'city' in k_lower or 'place' in k_lower:
                 city = actual_val
                 
         # Fallbacks agar koi field na mile
         name = name if name else "Client"
-        dob = dob if dob else "2004-06-15"
+        dob = dob if dob else "1998-10-15"
         tob = tob if tob else "12:00"
         city = city if city else "Delhi"
         

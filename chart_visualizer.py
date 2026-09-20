@@ -11,7 +11,7 @@ class VedicGridChartVisualizer:
         self.custom_prompt_text = custom_prompt_text or ""
         self.planets = []
         
-        # 1. Direct standard 7 planets grab
+        # 1. Standard 7 planets grab
         standard_attrs = ['sun', 'moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn']
         for attr in standard_attrs:
             if hasattr(subject, attr):
@@ -19,7 +19,7 @@ class VedicGridChartVisualizer:
                 if p_obj:
                     self.planets.append(p_obj)
 
-        # 2. Explicitly grab and rename Rahu (North Node)
+        # 2. Rahu grab
         rahu_obj = None
         for r_attr in ['true_node', 'mean_node', 'north_node', 'rahu']:
             if hasattr(subject, r_attr):
@@ -31,7 +31,7 @@ class VedicGridChartVisualizer:
             rahu_obj.name = 'Rahu'
             self.planets.append(rahu_obj)
 
-        # 3. Explicitly grab Ketu using correct Kerykeion names (true_south_node / mean_south_node)
+        # 3. Ketu grab
         ketu_obj = None
         for k_attr in ['true_south_node', 'mean_south_node', 'south_node', 'ketu']:
             if hasattr(subject, k_attr):
@@ -44,10 +44,8 @@ class VedicGridChartVisualizer:
             ketu_obj.name = 'Ketu'
             self.planets.append(ketu_obj)
         elif rahu_obj:
-            # Fallback: Clone Rahu and shift by 180 degrees / 6 houses if south node attr is missing
             ketu_obj = copy.deepcopy(rahu_obj)
             ketu_obj.name = 'Ketu'
-            
             rahu_house_raw = getattr(rahu_obj, 'house', 'First')
             rahu_h_num = self._extract_house_num(rahu_house_raw)
             if rahu_h_num > 0:
@@ -58,33 +56,37 @@ class VedicGridChartVisualizer:
                     9: 'Ninth', 10: 'Tenth', 11: 'Eleventh', 12: 'Twelfth'
                 }
                 ketu_obj.house = house_mapping_inv.get(ketu_h_num, 'First')
-            
             curr_pos = getattr(rahu_obj, 'position', 0.0)
             ketu_obj.position = (curr_pos + 180.0) % 360.0
-            
             self.planets.append(ketu_obj)
 
-        # 4. Fallback safeguard loop for any missed elements
-        if len(self.planets) < 9:
-            for attr in dir(subject):
-                if not attr.startswith('_') and attr not in ['model_fields', 'model_computed_fields']:
-                    try:
-                        val = getattr(subject, attr)
-                        if hasattr(val, 'name') and hasattr(val, 'sign'):
-                            name_lower = str(val.name).lower()
-                            if ('north' in name_lower or 'true' in name_lower or 'mean' in name_lower or 'rahu' in name_lower) and 'south' not in name_lower:
-                                val.name = 'Rahu'
-                                if val not in self.planets: self.planets.append(val)
-                            elif 'south' in name_lower or 'ketu' in name_lower:
-                                val.name = 'Ketu'
-                                if val not in self.planets: self.planets.append(val)
-                    except Exception:
-                        continue
+    def get_lagna_sign_number(self):
+        # Extract Lagna/Ascendant sign number (1 to 12) dynamically
+        sign_map = {
+            'aries': 1, 'taurus': 2, 'gemini': 3, 'cancer': 4,
+            'leo': 5, 'virgo': 6, 'libra': 7, 'scorpio': 8,
+            'sagittarius': 9, 'capricorn': 10, 'aquarius': 11, 'pisces': 12
+        }
+        asc = getattr(self.subject, 'ascendant', None)
+        if asc:
+            sign_name = str(getattr(asc, 'sign', asc)).lower()
+            for k, v in sign_map.items():
+                if k in sign_name:
+                    return v
+        return 1  # Default fallback
+
+    def get_house_rashi_map(self):
+        lagna_num = self.get_lagna_sign_number()
+        house_rashi = {}
+        for h in range(1, 13):
+            # Anticlockwise sequence calculation
+            r_num = ((lagna_num + h - 2) % 12) + 1
+            house_rashi[h] = r_num
+        return house_rashi
 
     def get_house_planets_map(self):
         house_planets = {i: [] for i in range(1, 13)}
         seen = set()
-        
         for p in self.planets:
             p_name = getattr(p, 'name', 'Planet').capitalize()
             if p_name in seen: continue
@@ -98,35 +100,36 @@ class VedicGridChartVisualizer:
 
     def generate_html_grid_chart(self, filename="AstroPandit_Kundali_Report.html"):
         hp = self.get_house_planets_map()
+        hr = self.get_house_rashi_map()
         
-        # Exact geometric center coordinates (X, Y) for North Indian houses 1 to 12
         house_coords = {
-            1:  (250, 130),
-            2:  (360, 95),
-            3:  (405, 140),
-            4:  (370, 250),
-            5:  (405, 360),
-            6:  (360, 405),
-            7:  (250, 370),
-            8:  (140, 405),
-            9:  (95,  360),
-            10: (130, 250),
-            11: (95,  140),
-            12: (140, 95)
+            1:  (250, 130), 2:  (360, 95),  3:  (405, 140), 4:  (370, 250),
+            5:  (405, 360), 6:  (360, 405), 7:  (250, 370), 8:  (140, 405),
+            9:  (95,  360), 10: (130, 250), 11: (95,  140), 12: (140, 95)
         }
 
-        def render_house_planets(h_num):
+        def render_house_content(h_num):
+            r_num = hr.get(h_num, h_num)
             p_list = hp.get(h_num, [])
-            if not p_list: return ""
             cx, cy = house_coords[h_num]
-            svg_tags = ""
-            start_y = cy - ((len(p_list) - 1) * 9)
-            for idx, p_code in enumerate(p_list):
-                curr_y = start_y + (idx * 18)
-                svg_tags += f'<tspan x="{cx}" y="{curr_y}" fill="#fde047" font-weight="bold">{p_code}</tspan>'
+            
+            # Rashi number position (top corner of each house box)
+            rashi_coords = {
+                1: (250, 75), 2: (140, 55), 3: (75, 115), 4: (130, 210),
+                5: (75, 310), 6: (140, 385), 7: (250, 330), 8: (360, 385),
+                9: (425, 310), 10: (370, 210), 11: (425, 115), 12: (360, 55)
+            }
+            rx, ry = rashi_coords[h_num]
+            
+            svg_tags = f'<text x="{rx}" y="{ry}" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">{r_num}</text>'
+            
+            if p_list:
+                start_y = cy - ((len(p_list) - 1) * 9)
+                for idx, p_code in enumerate(p_list):
+                    curr_y = start_y + (idx * 18)
+                    svg_tags += f'<tspan x="{cx}" y="{curr_y}" fill="#fde047" font-weight="bold">{p_code}</tspan>'
             return svg_tags
 
-        # Extract unique planets for details table
         unique_planets = []
         seen_p = set()
         for p in self.planets:
@@ -151,7 +154,6 @@ class VedicGridChartVisualizer:
                 </tr>
             """
 
-        # Build Yogas & Doshas cards
         yogas_html = ""
         for yog_key, data in self.vedic_results.items():
             formatted_name = yog_key.replace('_', ' ').title()
@@ -175,124 +177,25 @@ class VedicGridChartVisualizer:
             <meta charset="UTF-8">
             <title>Astro Pandit - Professional Vedic Kundali Report</title>
             <style>
-                body {{
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    background-color: #0b0f19;
-                    color: #f8fafc;
-                    margin: 0;
-                    padding: 40px 20px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }}
-                .report-container {{
-                    width: 100%;
-                    max-width: 850px;
-                    background: #111827;
-                    padding: 40px;
-                    border-radius: 20px;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-                    border: 2px solid #fbbf24;
-                }}
-                header {{
-                    text-align: center;
-                    border-bottom: 2px solid #374151;
-                    padding-bottom: 25px;
-                    margin-bottom: 30px;
-                }}
+                body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0b0f19; color: #f8fafc; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }}
+                .report-container {{ width: 100%; max-width: 850px; background: #111827; padding: 40px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); border: 2px solid #fbbf24; }}
+                header {{ text-align: center; border-bottom: 2px solid #374151; padding-bottom: 25px; margin-bottom: 30px; }}
                 header h1 {{ color: #fbbf24; margin: 0 0 10px 0; font-size: 28px; letter-spacing: 1.5px; }}
                 header p {{ color: #94a3b8; margin: 5px 0; font-size: 15px; }}
-                
-                .section-title {{
-                    color: #38bdf8;
-                    border-left: 4px solid #38bdf8;
-                    padding-left: 12px;
-                    margin-top: 40px;
-                    margin-bottom: 20px;
-                    font-size: 20px;
-                    letter-spacing: 0.5px;
-                }}
-                
-                .chart-section {{
-                    text-align: center;
-                    background: #0f172a;
-                    padding: 25px;
-                    border-radius: 12px;
-                    border: 1px solid #374151;
-                    margin-bottom: 30px;
-                }}
-                
-                table {{
-                    width: 100%;
-                    border-collapse: collapse;
-                    background: #0f172a;
-                    border-radius: 8px;
-                    overflow: hidden;
-                    margin-bottom: 30px;
-                    border: 1px solid #374151;
-                }}
-                th, td {{
-                    padding: 12px 15px;
-                    text-align: left;
-                    border-bottom: 1px solid #1e293b;
-                }}
-                th {{
-                    background: #1e293b;
-                    color: #fbbf24;
-                    font-weight: 600;
-                }}
+                .section-title {{ color: #38bdf8; border-left: 4px solid #38bdf8; padding-left: 12px; margin-top: 40px; margin-bottom: 20px; font-size: 20px; }}
+                .chart-section {{ text-align: center; background: #0f172a; padding: 25px; border-radius: 12px; border: 1px solid #374151; margin-bottom: 30px; }}
+                table {{ width: 100%; border-collapse: collapse; background: #0f172a; border-radius: 8px; overflow: hidden; margin-bottom: 30px; border: 1px solid #374151; }}
+                th, td {{ padding: 12px 15px; text-align: left; border-bottom: 1px solid #1e293b; }}
+                th {{ background: #1e293b; color: #fbbf24; font-weight: 600; }}
                 td {{ color: #e2e8f0; font-size: 14px; }}
-                tr:hover {{ background: #1a2234; }}
-                
-                .yoga-card {{
-                    background: #0f172a;
-                    border: 1px solid #374151;
-                    border-radius: 10px;
-                    padding: 20px;
-                    margin-bottom: 15px;
-                }}
-                .yoga-header {{
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 10px;
-                }}
+                .yoga-card {{ background: #0f172a; border: 1px solid #374151; border-radius: 10px; padding: 20px; margin-bottom: 15px; }}
+                .yoga-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }}
                 .yoga-header h3 {{ margin: 0; color: #fbbf24; font-size: 17px; }}
-                .status-badge {{
-                    padding: 4px 10px;
-                    border-radius: 20px;
-                    font-size: 12px;
-                    font-weight: bold;
-                    color: #fff;
-                }}
+                .status-badge {{ padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; color: #fff; }}
                 .yoga-card p {{ margin: 6px 0; color: #94a3b8; font-size: 14px; line-height: 1.5; }}
-                .yoga-card b {{ color: #e2e8f0; }}
-                
-                .dasha-box, .prompt-box {{
-                    background: #0f172a;
-                    border: 1px solid #374151;
-                    border-radius: 10px;
-                    padding: 15px;
-                    overflow-x: auto;
-                    font-family: monospace;
-                    color: #cbd5e1;
-                    font-size: 13px;
-                    white-space: pre-wrap;
-                }}
-                .prompt-box {{
-                    border: 1px dashed #38bdf8;
-                    color: #38bdf8;
-                    margin-bottom: 15px;
-                }}
-                
-                footer {{
-                    text-align: center;
-                    margin-top: 40px;
-                    padding-top: 20px;
-                    border-top: 1px solid #374151;
-                    color: #64748b;
-                    font-size: 13px;
-                }}
+                .dasha-box, .prompt-box {{ background: #0f172a; border: 1px solid #374151; border-radius: 10px; padding: 15px; overflow-x: auto; font-family: monospace; color: #cbd5e1; font-size: 13px; white-space: pre-wrap; }}
+                .prompt-box {{ border: 1px dashed #38bdf8; color: #38bdf8; margin-bottom: 15px; }}
+                footer {{ text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #374151; color: #64748b; font-size: 13px; }}
             </style>
         </head>
         <body>
@@ -315,72 +218,41 @@ class VedicGridChartVisualizer:
                         <line x1="250" y1="450" x2="50" y2="250" stroke="#fbbf24" stroke-width="2"/>
                         <line x1="50" y1="250" x2="250" y2="50" stroke="#fbbf24" stroke-width="2"/>
 
-                        <!-- Anticlockwise House/Rashi Numbers (North Indian Standard: Top Diamond is 1, then counter-clockwise) -->
-                        <text x="250" y="75" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">1</text>
-                        <text x="140" y="55" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">2</text>
-                        <text x="75" y="115" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">3</text>
-                        <text x="130" y="210" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">4</text>
-                        <text x="75" y="310" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">5</text>
-                        <text x="140" y="385" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">6</text>
-                        <text x="250" y="330" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">7</text>
-                        <text x="360" y="385" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">8</text>
-                        <text x="425" y="310" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">9</text>
-                        <text x="370" y="210" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">10</text>
-                        <text x="425" y="115" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">11</text>
-                        <text x="360" y="55" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">12</text>
-
-                        <!-- Planets -->
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(1)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(2)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(3)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(4)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(5)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(6)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(7)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(8)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(9)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(10)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(11)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(12)}</text>
+                        <!-- Dynamic Rashi Numbers & Planets -->
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(1)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(2)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(3)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(4)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(5)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(6)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(7)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(8)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(9)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(10)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(11)}</text>
+                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(12)}</text>
                     </svg>
                 </div>
 
                 <div class="section-title">Planetary Positions & House Placements</div>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Planet</th>
-                            <th>Zodiac Sign</th>
-                            <th>Degree</th>
-                            <th>House</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {planets_table_rows}
-                    </tbody>
+                    <thead><tr><th>Planet</th><th>Zodiac Sign</th><th>Degree</th><th>House</th></tr></thead>
+                    <tbody>{planets_table_rows}</tbody>
                 </table>
 
                 <div class="section-title">Detailed Dosh & Yoga Analysis</div>
                 {yogas_html}
 
                 <div class="section-title">Vimshottari Mahadasha & Antardasha Timeline (100-Year)</div>
-                <div class="dasha-box">
-                    {self.dasha_table_str}
-                </div>
+                <div class="dasha-box">{self.dasha_table_str}</div>
 
-                <div class="section-title">1. Master Core Consultation Prompt (Hinglish & Simple)</div>
-                <div class="prompt-box">
-                    {self.ai_prompt_text}
-                </div>
+                <div class="section-title">1. Master Core Consultation Prompt</div>
+                <div class="prompt-box">{self.ai_prompt_text}</div>
 
-                <div class="section-title">2. Custom House Inquiry Prompt (For any other house)</div>
-                <div class="prompt-box">
-                    {self.custom_prompt_text}
-                </div>
+                <div class="section-title">2. Custom House Inquiry Prompt</div>
+                <div class="prompt-box">{self.custom_prompt_text}</div>
 
-                <footer>
-                    Astro Pandit Automated Report Factory &bull; Powered by Lahiri Sidereal Engine
-                </footer>
+                <footer>Astro Pandit Automated Report Factory &bull; Powered by Lahiri Sidereal Engine</footer>
             </div>
         </body>
         </html>
@@ -389,10 +261,8 @@ class VedicGridChartVisualizer:
         output_dir = "charts_output"
         os.makedirs(output_dir, exist_ok=True)
         file_path = os.path.join(output_dir, filename)
-        
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(html_content)
-            
         return file_path
 
     def _extract_house_num(self, house_str):
