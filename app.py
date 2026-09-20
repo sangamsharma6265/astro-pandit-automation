@@ -5,8 +5,6 @@ from pathlib import Path
 from flask import Flask, request, jsonify
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
 from geopy.geocoders import Nominatim
 from kerykeion import AstrologicalSubjectFactory
 from kerykeion.chart_data.factory import ChartDataFactory
@@ -33,32 +31,6 @@ else:
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name(str(cred_path), scope)
 client = gspread.authorize(creds)
-
-# Google Drive API Client Setup
-drive_service = build('drive', 'v3', credentials=creds)
-
-DRIVE_FOLDER_ID = "1HsghCRIIp4zK880WzHTvsQMoa6g0LaCK"
-
-def upload_to_drive(file_path, file_name):
-    try:
-        file_metadata = {
-            'name': file_name,
-            'parents': [DRIVE_FOLDER_ID]
-        }
-        media = MediaFileUpload(str(file_path), resumable=True)
-        
-        # supportsAllDrives aur corporative quota fix ke liye parameters add kiye hain
-        file = drive_service.files().create(
-            body=file_metadata,
-            media_body=media,
-            fields='id',
-            supportsAllDrives=True
-        ).execute()
-        
-        print(f"[DRIVE] File successfully uploaded to Google Drive! File ID: {file.get('id')}")
-    except Exception as e:
-        print(f"[DRIVE ERROR] Failed to upload: {e}")
-        traceback.print_exc()
 
 geolocator = Nominatim(user_agent="astro_pandit_worker")
 
@@ -165,11 +137,19 @@ Instructions: Explain in simple Hinglish (conversational Hindi in English letter
         report_filename = f"{name.replace(' ', '_')}_Kundali_Report.html"
         report_path = BASE_DIR / report_filename
         
+        # HTML file generate kar li local flask container mein
         grid_visualizer.generate_html_grid_chart(filename=str(report_path))
         
-        upload_to_drive(report_path, report_filename)
-        
-        return jsonify({"status": "success", "message": f"Report generated and uploaded for {name}!"}), 200
+        # File ka HTML content read karke response mein bhej rahe hain
+        with open(report_path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+            
+        return jsonify({
+            "status": "success",
+            "filename": report_filename,
+            "html_content": html_content,
+            "message": f"Report generated successfully for {name}!"
+        }), 200
 
     except Exception as e:
         print(f"\n[CRITICAL ERROR FOUND IN WEBHOOK]")
