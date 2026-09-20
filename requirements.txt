@@ -8,3 +8,4 @@ google-auth-httplib2
 requests
 gspread
 geopy
+oauth2client
