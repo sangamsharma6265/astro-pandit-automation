@@ -37,7 +37,23 @@ client = gspread.authorize(creds)
 # Google Drive API Client Setup
 drive_service = build('drive', 'v3', credentials=creds)
 
-# Tera Google Drive Folder ID jahan storage tere account ki use hogi
+# --- DEBUG: Print all accessible folders to find the exact ID ---
+try:
+    print("\n[DRIVE DEBUG] Listing folders accessible to Service Account:")
+    results = drive_service.files().list(
+        q="mimeType = 'application/vnd.google-apps.folder'",
+        pageSize=10,
+        fields="files(id, name)"
+    ).execute()
+    folders = results.get('files', [])
+    if not folders:
+        print("[DRIVE DEBUG] No folders found accessible to this service account! Check sharing.")
+    else:
+        for f in folders:
+            print(f" -> Folder Name: '{f['name']}' | ID: {f['id']}")
+except Exception as e:
+    print(f"[DRIVE DEBUG ERROR] Could not list folders: {e}")
+
 DRIVE_FOLDER_ID = "1HsghCRIIp4zK880WzHTvsQMoa6g0LaCK"
 
 def upload_to_drive(file_path, file_name):
@@ -162,7 +178,6 @@ Instructions: Explain in simple Hinglish (conversational Hindi in English letter
         
         grid_visualizer.generate_html_grid_chart(filename=str(report_path))
         
-        # Google Drive par specific folder mein upload
         upload_to_drive(report_path, report_filename)
         
         return jsonify({"status": "success", "message": f"Report generated and uploaded for {name}!"}), 200
