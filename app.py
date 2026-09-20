@@ -1,5 +1,6 @@
 import os
 import json
+import traceback
 from pathlib import Path
 from flask import Flask, request, jsonify
 import gspread
@@ -39,7 +40,7 @@ drive_service = build('drive', 'v3', credentials=creds)
 def upload_to_drive(file_path, file_name):
     try:
         file_metadata = {'name': file_name}
-        media = MediaFileUpload(file_path, resumable=True)
+        media = MediaFileUpload(str(file_path), resumable=True)
         file = drive_service.files().create(
             body=file_metadata, media_body=media, fields='id'
         ).execute()
@@ -86,18 +87,25 @@ def webhook():
         
         print(f"\n[WEBHOOK TRIGGERED] New entry -> Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
         
-        # Smart Date & Time Parsing
+        # Smart Date & Time Parsing (with optional time handling)
+        year, month, day = 1998, 10, 15
+        hour, minute = 12, 0
+        
         try:
-            parts_date = dob.split('-' if '-' in dob else '/')
-            if len(parts_date[0]) == 4:
-                year, month, day = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
-            else:
-                day, month, year = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
+            if dob:
+                parts_date = dob.split('-' if '-' in dob else '/')
+                if len(parts_date[0]) == 4:
+                    year, month, day = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
+                else:
+                    day, month, year = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
             
-            parts_time = tob.split(':')
-            hour, minute = int(parts_time[0]), int(parts_time[1])
-        except Exception:
-            year, month, day, hour, minute = 1998, 10, 15, 14, 30
+            if tob and ':' in tob:
+                parts_time = tob.split(':')
+                hour, minute = int(parts_time[0]), int(parts_time[1])
+            else:
+                hour, minute = 12, 0  # Default 12 PM if time is optional/blank
+        except Exception as parse_err:
+            print(f"[PARSING WARNING] Using defaults due to: {parse_err}")
 
         lat, lng = get_lat_lng(city if city else "Delhi")
         
@@ -146,15 +154,18 @@ Instructions: Explain in simple Hinglish (conversational Hindi in English letter
         )
         
         report_filename = f"{name.replace(' ', '_')}_Kundali_Report.html"
-        grid_visualizer.generate_html_grid_chart(filename=report_filename)
+        report_path = BASE_DIR / report_filename
+        
+        grid_visualizer.generate_html_grid_chart(filename=str(report_path))
         
         # Google Drive par upload
-        upload_to_drive(report_filename, report_filename)
+        upload_to_drive(report_path, report_filename)
         
         return jsonify({"status": "success", "message": f"Report generated and uploaded for {name}!"}), 200
 
     except Exception as e:
-        print(f"[ERROR] {e}")
+        print(f"\n[CRITICAL ERROR FOUND IN WEBHOOK]")
+        traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
