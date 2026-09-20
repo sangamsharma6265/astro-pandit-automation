@@ -34,25 +34,16 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 creds = ServiceAccountCredentials.from_json_keyfile_name(str(cred_path), scope)
 client = gspread.authorize(creds)
 
+# --- DIRECTLY PRINTING THE EXACT SERVICE ACCOUNT EMAIL ---
+try:
+    print("\n==================================================")
+    print(f"👉 COPY THIS EMAIL FOR DRIVE SHARING: {creds.service_account_email}")
+    print("==================================================\n")
+except Exception as e:
+    print(f"[ERROR] Could not extract service account email: {e}")
+
 # Google Drive API Client Setup
 drive_service = build('drive', 'v3', credentials=creds)
-
-# --- DEBUG: Print all accessible folders to find the exact ID ---
-try:
-    print("\n[DRIVE DEBUG] Listing folders accessible to Service Account:")
-    results = drive_service.files().list(
-        q="mimeType = 'application/vnd.google-apps.folder'",
-        pageSize=10,
-        fields="files(id, name)"
-    ).execute()
-    folders = results.get('files', [])
-    if not folders:
-        print("[DRIVE DEBUG] No folders found accessible to this service account! Check sharing.")
-    else:
-        for f in folders:
-            print(f" -> Folder Name: '{f['name']}' | ID: {f['id']}")
-except Exception as e:
-    print(f"[DRIVE DEBUG ERROR] Could not list folders: {e}")
 
 DRIVE_FOLDER_ID = "1HsghCRIIp4zK880WzHTvsQMoa6g0LaCK"
 
