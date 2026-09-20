@@ -11,7 +11,6 @@ class VedicGridChartVisualizer:
         self.custom_prompt_text = custom_prompt_text or ""
         self.planets = []
         
-        # 1. Standard 7 planets grab
         standard_attrs = ['sun', 'moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn']
         for attr in standard_attrs:
             if hasattr(subject, attr):
@@ -19,7 +18,6 @@ class VedicGridChartVisualizer:
                 if p_obj:
                     self.planets.append(p_obj)
 
-        # 2. Rahu grab
         rahu_obj = None
         for r_attr in ['true_node', 'mean_node', 'north_node', 'rahu']:
             if hasattr(subject, r_attr):
@@ -31,7 +29,6 @@ class VedicGridChartVisualizer:
             rahu_obj.name = 'Rahu'
             self.planets.append(rahu_obj)
 
-        # 3. Ketu grab
         ketu_obj = None
         for k_attr in ['true_south_node', 'mean_south_node', 'south_node', 'ketu']:
             if hasattr(subject, k_attr):
@@ -61,7 +58,6 @@ class VedicGridChartVisualizer:
             self.planets.append(ketu_obj)
 
     def get_lagna_sign_number(self):
-        # Extract Lagna/Ascendant sign number (1 to 12) dynamically
         sign_map = {
             'aries': 1, 'taurus': 2, 'gemini': 3, 'cancer': 4,
             'leo': 5, 'virgo': 6, 'libra': 7, 'scorpio': 8,
@@ -73,13 +69,12 @@ class VedicGridChartVisualizer:
             for k, v in sign_map.items():
                 if k in sign_name:
                     return v
-        return 1  # Default fallback
+        return 1
 
     def get_house_rashi_map(self):
         lagna_num = self.get_lagna_sign_number()
         house_rashi = {}
         for h in range(1, 13):
-            # Anticlockwise sequence calculation
             r_num = ((lagna_num + h - 2) % 12) + 1
             house_rashi[h] = r_num
         return house_rashi
@@ -108,26 +103,26 @@ class VedicGridChartVisualizer:
             9:  (95,  360), 10: (130, 250), 11: (95,  140), 12: (140, 95)
         }
 
+        rashi_coords = {
+            1: (250, 75),  2: (140, 55),  3: (75, 115),  4: (130, 210),
+            5: (75, 310),  6: (140, 385), 7: (250, 330), 8: (360, 385),
+            9: (425, 310), 10: (370, 210), 11: (425, 115), 12: (360, 55)
+        }
+
         def render_house_content(h_num):
             r_num = hr.get(h_num, h_num)
             p_list = hp.get(h_num, [])
             cx, cy = house_coords[h_num]
-            
-            # Rashi number position (top corner of each house box)
-            rashi_coords = {
-                1: (250, 75), 2: (140, 55), 3: (75, 115), 4: (130, 210),
-                5: (75, 310), 6: (140, 385), 7: (250, 330), 8: (360, 385),
-                9: (425, 310), 10: (370, 210), 11: (425, 115), 12: (360, 55)
-            }
             rx, ry = rashi_coords[h_num]
             
-            svg_tags = f'<text x="{rx}" y="{ry}" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">{r_num}</text>'
+            # Direct valid SVG elements (no outer wrapper text tag)
+            svg_tags = f'<text x="{rx}" y="{ry}" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="middle">{r_num}</text>'
             
             if p_list:
-                start_y = cy - ((len(p_list) - 1) * 9)
+                start_y = cy - ((len(p_list) - 1) * 10)
                 for idx, p_code in enumerate(p_list):
-                    curr_y = start_y + (idx * 18)
-                    svg_tags += f'<tspan x="{cx}" y="{curr_y}" fill="#fde047" font-weight="bold">{p_code}</tspan>'
+                    curr_y = start_y + (idx * 20)
+                    svg_tags += f'<text x="{cx}" y="{curr_y}" fill="#fde047" font-size="13" font-weight="bold" text-anchor="middle">{p_code}</text>'
             return svg_tags
 
         unique_planets = []
@@ -218,19 +213,19 @@ class VedicGridChartVisualizer:
                         <line x1="250" y1="450" x2="50" y2="250" stroke="#fbbf24" stroke-width="2"/>
                         <line x1="50" y1="250" x2="250" y2="50" stroke="#fbbf24" stroke-width="2"/>
 
-                        <!-- Dynamic Rashi Numbers & Planets -->
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(1)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(2)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(3)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(4)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(5)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(6)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(7)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(8)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(9)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(10)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(11)}</text>
-                        <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_content(12)}</text>
+                        <!-- Direct SVG House Contents -->
+                        {render_house_content(1)}
+                        {render_house_content(2)}
+                        {render_house_content(3)}
+                        {render_house_content(4)}
+                        {render_house_content(5)}
+                        {render_house_content(6)}
+                        {render_house_content(7)}
+                        {render_house_content(8)}
+                        {render_house_content(9)}
+                        {render_house_content(10)}
+                        {render_house_content(11)}
+                        {render_house_content(12)}
                     </svg>
                 </div>
 
