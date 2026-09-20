@@ -49,43 +49,19 @@ def webhook():
         req_data = request.get_json(silent=True) or request.form.to_dict() or request.args.to_dict() or {}
         print(f"\n[INCOMING PAYLOAD]: {req_data}")
         
-        name = None
-        dob = None
-        tob = None
-        city = None
-        
-        # Deep Key Scanning
-        for k, v in req_data.items():
-            k_clean = str(k).strip().lower()
-            val_clean = str(v[0] if isinstance(v, list) else v).strip()
-            
-            if not val_clean or val_clean.lower() in ['none', '']:
-                continue
+        # Direct key mapping from Apps Script
+        name = req_data.get('name', 'Client')
+        dob = req_data.get('dob', '1998-10-15')
+        tob = req_data.get('tob', '12:00')
+        city = req_data.get('city', 'Delhi')
                 
-            if any(term in k_clean for term in ['name', 'client', 'applicant', 'naam']):
-                name = val_clean
-            elif any(term in k_clean for term in ['dob', 'birth date', 'date of birth', 'date', 'birthdate']):
-                dob = val_clean
-            elif any(term in k_clean for term in ['tob', 'birth time', 'time of birth', 'time']):
-                tob = val_clean
-            elif any(term in k_clean for term in ['city', 'location', 'place', 'birth place', 'pob', 'sthan']):
-                city = val_clean
-
-        # Fallbacks agar koi specific key match na ho toh pehli available non-empty values utha lo
-        if not name and len(req_data) > 0:
-            name = list(req_data.values())[0]
-        if not name: name = "Client"
-        if not dob: dob = "1998-10-15"
-        if not tob: tob = "12:00"
-        if not city: city = "Delhi"
-                
-        print(f"\n[FINAL EXTRACTED] Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
+        print(f"\n[PARSED DATA] Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
         
         year, month, day = 1998, 10, 15
         hour, minute = 12, 0
         
         try:
-            # Parse Date
+            # Parse Date safely
             dob_str = str(dob).strip().split('T')[0].split()[0]
             parts_date = dob_str.replace('/', '-').split('-')
             if len(parts_date) >= 3:
@@ -94,7 +70,7 @@ def webhook():
                 else:
                     day, month, year = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
             
-            # Parse Time
+            # Parse Time safely
             tob_str = str(tob).strip().upper()
             is_pm = 'PM' in tob_str
             is_am = 'AM' in tob_str
