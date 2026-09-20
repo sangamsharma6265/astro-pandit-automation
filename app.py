@@ -37,15 +37,10 @@ client = gspread.authorize(creds)
 # Google Drive API Client Setup
 drive_service = build('drive', 'v3', credentials=creds)
 
-# Tera Google Drive Folder ID yahan set kar diya hai
-DRIVE_FOLDER_ID = "1HsghCRIIp4zK880WzHTvsQMoa6g0LaCK"
-
 def upload_to_drive(file_path, file_name):
     try:
-        file_metadata = {
-            'name': file_name,
-            'parents': [DRIVE_FOLDER_ID]
-        }
+        # Temporary test ke liye parents hata diya hai taaki root folder mein check ho sake
+        file_metadata = {'name': file_name}
         media = MediaFileUpload(str(file_path), resumable=True)
         file = drive_service.files().create(
             body=file_metadata, media_body=media, fields='id'
@@ -162,7 +157,7 @@ Instructions: Explain in simple Hinglish (conversational Hindi in English letter
         
         grid_visualizer.generate_html_grid_chart(filename=str(report_path))
         
-        # Google Drive par upload specific folder mein
+        # Google Drive par upload root mein
         upload_to_drive(report_path, report_filename)
         
         return jsonify({"status": "success", "message": f"Report generated and uploaded for {name}!"}), 200
