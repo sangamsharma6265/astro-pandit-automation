@@ -49,35 +49,37 @@ def webhook():
         req_data = request.get_json(silent=True) or request.form.to_dict() or request.args.to_dict() or {}
         print(f"\n[INCOMING PAYLOAD]: {req_data}")
         
-        name = "Client"
+        # Fallbacks
+        name = "Rahul"
         dob = "1998-10-15"
-        tob = "12:00"
+        tob = "14:30"
         city = "Delhi"
         
+        # Flexible key matching for Google Forms / Sheets Webhook
         for k, v in req_data.items():
             k_clean = str(k).strip().lower()
             val_clean = str(v[0] if isinstance(v, list) else v).strip()
             
-            if not val_clean:
+            if not val_clean or val_clean.lower() == 'none':
                 continue
                 
-            if 'client name' in k_clean or k_clean == 'name':
+            if any(term in k_clean for term in ['name', 'client']):
                 name = val_clean
-            elif 'date of birth' in k_clean or 'dob' in k_clean or k_clean == 'date':
+            elif any(term in k_clean for term in ['dob', 'birth date', 'date of birth', 'date']):
                 dob = val_clean
-            elif 'time of birth' in k_clean or 'tob' in k_clean or k_clean == 'time':
+            elif any(term in k_clean for term in ['tob', 'birth time', 'time of birth', 'time']):
                 tob = val_clean
-            elif 'location of birth' in k_clean or 'location' in k_clean or 'city' in k_clean or 'place' in k_clean:
+            elif any(term in k_clean for term in ['city', 'location', 'place', 'birth place']):
                 city = val_clean
                 
         print(f"\n[PARSED DATA] Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
         
         year, month, day = 1998, 10, 15
-        hour, minute = 12, 0
+        hour, minute = 14, 30
         
         try:
             if dob:
-                dob_str = str(dob).strip()
+                dob_str = str(dob).strip().split('T')[0] # handle ISO date formats if any
                 parts_date = dob_str.split('-' if '-' in dob_str else '/')
                 if len(parts_date) >= 3:
                     if len(parts_date[0]) == 4:

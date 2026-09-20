@@ -97,26 +97,27 @@ class VedicGridChartVisualizer:
         hp = self.get_house_planets_map()
         hr = self.get_house_rashi_map()
         
+        # Planet text display center coordinates for each house
         house_coords = {
-            1:  (250, 130), 2:  (360, 95),  3:  (405, 140), 4:  (370, 250),
-            5:  (405, 360), 6:  (360, 405), 7:  (250, 370), 8:  (140, 405),
-            9:  (95,  360), 10: (130, 250), 11: (95,  140), 12: (140, 95)
+            1:  (250, 140), 2:  (160, 90),  3:  (100, 140), 4:  (140, 250),
+            5:  (100, 360), 6:  (160, 410), 7:  (250, 360), 8:  (340, 410),
+            9:  (400, 360), 10: (360, 250), 11: (400, 140), 12: (340, 90)
         }
 
-        # Perfect adjusted coordinates to keep Rashi numbers safe inside boxes
+        # Perfectly aligned Rashi numbers inside each compartment
         rashi_coords = {
-            1:  (250, 95),   
-            2:  (160, 80),   
-            3:  (95, 140),   
-            4:  (150, 210),  
-            5:  (95, 310),   
-            6:  (160, 370),  
-            7:  (250, 310),  
-            8:  (340, 370),  
-            9:  (405, 310),  
-            10: (350, 210), 
-            11: (405, 140), 
-            12: (340, 80)   
+            1:  (250, 90),   
+            2:  (115, 75),   
+            3:  (75,  115),   
+            4:  (95,  250),  
+            5:  (75,  385),  
+            6:  (115, 425),  
+            7:  (250, 410),  
+            8:  (385, 425),  
+            9:  (425, 385),  
+            10: (405, 250), 
+            11: (425, 115), 
+            12: (385, 75)   
         }
 
         def render_house_content(h_num):
@@ -145,7 +146,7 @@ class VedicGridChartVisualizer:
         planets_table_rows = ""
         for p in unique_planets:
             house_raw = getattr(p, 'house', 'N/A')
-            house_clean = house_raw.replace('_', ' ').replace('House', '').strip() if house_raw else 'N/A'
+            house_clean = str(house_raw).replace('_', ' ').replace('House', '').strip() if house_raw else 'N/A'
             p_name = getattr(p, 'name', 'Planet').capitalize()
             sign = getattr(p, 'sign', 'N/A')
             pos = getattr(p, 'position', 0.0)
