@@ -15,26 +15,29 @@ from chart_visualizer import VedicGridChartVisualizer
 
 app = Flask(__name__)
 
-# --- RENDER/CLOUD CREDENTIALS FIX ---
+# --- SMART CREDENTIALS LOADER (Bina file ki jhanjhat ke) ---
 CREDENTIALS_DATA = os.environ.get("CREDENTIALS_JSON")
+
+cred_dict = {}
 if CREDENTIALS_DATA:
     try:
-        parsed_json = json.loads(CREDENTIALS_DATA)
-        with open("credentials.json", "w") as f:
-            json.dump(parsed_json, f)
-        print("[INFO] credentials.json successfully generated from environment variable.")
+        # Render env variable se direct JSON load karna
+        cred_dict = json.loads(CREDENTIALS_DATA)
+        print("[INFO] Credentials successfully loaded from environment variable.")
     except Exception as e:
-        print(f"[ERROR] Invalid CREDENTIALS_JSON format: {e}")
+        print(f"[ERROR] JSON parse error: {e}")
 else:
-    print("[WARNING] CREDENTIALS_JSON environment variable not found!")
-# ------------------------------------
-
-# 1. Secure Absolute Path & Setup
-BASE_DIR = Path(__file__).resolve().parent
-cred_path = BASE_DIR / "credentials.json"
+    # Local machine ke liye fallback agar file available ho
+    cred_path = Path(__file__).resolve().parent / "credentials.json"
+    if cred_path.exists():
+        with open(cred_path, "r") as f:
+            cred_dict = json.load(f)
+        print("[INFO] Credentials loaded from local credentials.json file.")
+    else:
+        print("[WARNING] No credentials found!")
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name(str(cred_path), scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(cred_dict, scope)
 client = gspread.authorize(creds)
 
 # Google Drive API Client Setup
