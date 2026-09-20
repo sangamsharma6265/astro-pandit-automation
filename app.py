@@ -50,22 +50,14 @@ def home():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     try:
-        sheet = client.open("AstroPandit").sheet1
-        rows = sheet.get_all_values()
+        # Apps Script jo JSON payload bhej raha hai, ab hum direct wahi use karenge!
+        req_data = request.get_json() or {}
         
-        if len(rows) < 2:
-            return jsonify({"status": "error", "message": "No data found in sheet"}), 400
-        
-        latest_row = rows[-1]
-        
-        if len(latest_row) < 5:
-            return jsonify({"status": "error", "message": "Invalid row data"}), 400
-        
-        timestamp = latest_row[0]
-        name = latest_row[1]
-        dob = latest_row[2]
-        tob = latest_row[3]
-        city = latest_row[4]
+        # Form ke field names (Name, DOB, TOB, City ya inke alag variations ko handle karne ke liye)
+        name = req_data.get('Name') or req_data.get('name') or req_data.get('Your Name') or "Client"
+        dob = req_data.get('DOB') or req_data.get('dob') or req_data.get('Birth Date') or "2004-06-15"
+        tob = req_data.get('TOB') or req_data.get('tob') or req_data.get('Birth Time') or "12:00"
+        city = req_data.get('City') or req_data.get('city') or req_data.get('Birth Place') or "Delhi"
         
         print(f"\n[WEBHOOK TRIGGERED] New entry -> Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
         
@@ -137,10 +129,8 @@ Instructions: Explain in simple Hinglish (conversational Hindi in English letter
         report_filename = f"{name.replace(' ', '_')}_Kundali_Report.html"
         report_path = BASE_DIR / report_filename
         
-        # Generate HTML file locally
         grid_visualizer.generate_html_grid_chart(filename=str(report_path))
         
-        # Read HTML content to send back to Apps Script
         with open(report_path, "r", encoding="utf-8") as f:
             html_content = f.read()
             
