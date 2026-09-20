@@ -75,6 +75,7 @@ class VedicGridChartVisualizer:
         lagna_num = self.get_lagna_sign_number()
         house_rashi = {}
         for h in range(1, 13):
+            # Anticlockwise rashi assignment based on Lagna sign
             r_num = ((lagna_num + h - 2) % 12) + 1
             house_rashi[h] = r_num
         return house_rashi
@@ -97,14 +98,12 @@ class VedicGridChartVisualizer:
         hp = self.get_house_planets_map()
         hr = self.get_house_rashi_map()
         
-        # Planet text display center coordinates for each house
         house_coords = {
             1:  (250, 140), 2:  (160, 90),  3:  (100, 140), 4:  (140, 250),
             5:  (100, 360), 6:  (160, 410), 7:  (250, 360), 8:  (340, 410),
             9:  (400, 360), 10: (360, 250), 11: (400, 140), 12: (340, 90)
         }
 
-        # Perfectly aligned Rashi numbers inside each compartment
         rashi_coords = {
             1:  (250, 90),   
             2:  (115, 75),   

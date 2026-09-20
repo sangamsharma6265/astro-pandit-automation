@@ -49,60 +49,68 @@ def webhook():
         req_data = request.get_json(silent=True) or request.form.to_dict() or request.args.to_dict() or {}
         print(f"\n[INCOMING PAYLOAD]: {req_data}")
         
-        # Fallbacks
-        name = "Rahul"
-        dob = "1998-10-15"
-        tob = "14:30"
-        city = "Delhi"
+        name = None
+        dob = None
+        tob = None
+        city = None
         
-        # Flexible key matching for Google Forms / Sheets Webhook
+        # Deep Key Scanning
         for k, v in req_data.items():
             k_clean = str(k).strip().lower()
             val_clean = str(v[0] if isinstance(v, list) else v).strip()
             
-            if not val_clean or val_clean.lower() == 'none':
+            if not val_clean or val_clean.lower() in ['none', '']:
                 continue
                 
-            if any(term in k_clean for term in ['name', 'client']):
+            if any(term in k_clean for term in ['name', 'client', 'applicant', 'naam']):
                 name = val_clean
-            elif any(term in k_clean for term in ['dob', 'birth date', 'date of birth', 'date']):
+            elif any(term in k_clean for term in ['dob', 'birth date', 'date of birth', 'date', 'birthdate']):
                 dob = val_clean
             elif any(term in k_clean for term in ['tob', 'birth time', 'time of birth', 'time']):
                 tob = val_clean
-            elif any(term in k_clean for term in ['city', 'location', 'place', 'birth place']):
+            elif any(term in k_clean for term in ['city', 'location', 'place', 'birth place', 'pob', 'sthan']):
                 city = val_clean
+
+        # Fallbacks agar koi specific key match na ho toh pehli available non-empty values utha lo
+        if not name and len(req_data) > 0:
+            name = list(req_data.values())[0]
+        if not name: name = "Client"
+        if not dob: dob = "1998-10-15"
+        if not tob: tob = "12:00"
+        if not city: city = "Delhi"
                 
-        print(f"\n[PARSED DATA] Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
+        print(f"\n[FINAL EXTRACTED] Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
         
         year, month, day = 1998, 10, 15
-        hour, minute = 14, 30
+        hour, minute = 12, 0
         
         try:
-            if dob:
-                dob_str = str(dob).strip().split('T')[0] # handle ISO date formats if any
-                parts_date = dob_str.split('-' if '-' in dob_str else '/')
-                if len(parts_date) >= 3:
-                    if len(parts_date[0]) == 4:
-                        year, month, day = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
-                    else:
-                        day, month, year = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
+            # Parse Date
+            dob_str = str(dob).strip().split('T')[0].split()[0]
+            parts_date = dob_str.replace('/', '-').split('-')
+            if len(parts_date) >= 3:
+                if len(parts_date[0]) == 4:
+                    year, month, day = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
+                else:
+                    day, month, year = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
             
-            if tob:
-                tob_str = str(tob).strip().upper()
-                is_pm = 'PM' in tob_str
-                is_am = 'AM' in tob_str
-                time_clean = tob_str.replace('AM', '').replace('PM', '').strip()
-                parts_time = time_clean.split(':')
-                if len(parts_time) >= 2:
-                    hour, minute = int(parts_time[0]), int(parts_time[1])
-                    if is_pm and hour < 12:
-                        hour += 12
-                    elif is_am and hour == 12:
-                        hour = 0
+            # Parse Time
+            tob_str = str(tob).strip().upper()
+            is_pm = 'PM' in tob_str
+            is_am = 'AM' in tob_str
+            time_clean = tob_str.replace('AM', '').replace('PM', '').strip()
+            parts_time = time_clean.split(':')
+            if len(parts_time) >= 2:
+                hour, minute = int(parts_time[0]), int(parts_time[1])
+                if is_pm and hour < 12:
+                    hour += 12
+                elif is_am and hour == 12:
+                    hour = 0
         except Exception as parse_err:
             print(f"[PARSING WARNING]: {parse_err}")
 
         lat, lng = get_lat_lng(city)
+        print(f"[LOCATION] {city} -> Lat: {lat}, Lng: {lng}")
         
         subject = AstrologicalSubjectFactory.from_birth_data(
             name=str(name), year=year, month=month, day=day, hour=hour, minute=minute,
