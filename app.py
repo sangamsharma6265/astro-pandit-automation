@@ -50,30 +50,47 @@ def home():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     try:
-        # Apps Script jo JSON payload bhej raha hai, ab hum direct wahi use karenge!
         req_data = request.get_json() or {}
+        print(f"\n[INCOMING PAYLOAD]: {req_data}")
         
-        # Form ke field names (Name, DOB, TOB, City ya inke alag variations ko handle karne ke liye)
-        name = req_data.get('Name') or req_data.get('name') or req_data.get('Your Name') or "Client"
-        dob = req_data.get('DOB') or req_data.get('dob') or req_data.get('Birth Date') or "2004-06-15"
-        tob = req_data.get('TOB') or req_data.get('tob') or req_data.get('Birth Time') or "12:00"
-        city = req_data.get('City') or req_data.get('city') or req_data.get('Birth Place') or "Delhi"
+        # Sabhi possible keys ko dynamically check karne ke liye
+        name = None
+        dob = None
+        tob = None
+        city = None
         
-        print(f"\n[WEBHOOK TRIGGERED] New entry -> Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
+        for k, v in req_data.items():
+            k_lower = k.lower()
+            if 'name' in k_lower:
+                name = v
+            elif 'dob' in k_lower or 'birth date' in k_lower or 'date' in k_lower:
+                dob = v
+            elif 'tob' in k_lower or 'time' in k_lower:
+                tob = v
+            elif 'city' in k_lower or 'place' in k_lower or 'location' in k_lower:
+                city = v
+                
+        # Fallbacks agar koi field na mile
+        name = name if name else "Client"
+        dob = dob if dob else "2004-06-15"
+        tob = tob if tob else "12:00"
+        city = city if city else "Delhi"
+        
+        print(f"\n[WEBHOOK TRIGGERED] Parsed -> Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
         
         year, month, day = 1998, 10, 15
         hour, minute = 12, 0
         
         try:
             if dob:
-                parts_date = dob.split('-' if '-' in dob else '/')
+                parts_date = str(dob).split('-' if '-' in str(dob) else '/')
                 if len(parts_date[0]) == 4:
                     year, month, day = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
                 else:
                     day, month, year = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
             
-            if tob and ':' in tob:
-                parts_time = tob.split(':')
+            if tob and ':' in str(tob):
+                parts_time = str(tob).split(':')
                 hour, minute = int(parts_time[0]), int(parts_time[1])
             else:
                 hour, minute = 12, 0
@@ -83,7 +100,7 @@ def webhook():
         lat, lng = get_lat_lng(city if city else "Delhi")
         
         subject = AstrologicalSubjectFactory.from_birth_data(
-            name=name, year=year, month=month, day=day, hour=hour, minute=minute,
+            name=str(name), year=year, month=month, day=day, hour=hour, minute=minute,
             lng=lng, lat=lat, tz_str="Asia/Kolkata", online=False,
             zodiac_type="Sidereal", sidereal_mode="LAHIRI"
         )
@@ -126,7 +143,7 @@ Instructions: Explain in simple Hinglish (conversational Hindi in English letter
             dasha_table_str=dasha_table_str, ai_prompt_text=ai_prompt_text, custom_prompt_text=custom_prompt_text
         )
         
-        report_filename = f"{name.replace(' ', '_')}_Kundali_Report.html"
+        report_filename = f"{str(name).replace(' ', '_')}_Kundali_Report.html"
         report_path = BASE_DIR / report_filename
         
         grid_visualizer.generate_html_grid_chart(filename=str(report_path))
