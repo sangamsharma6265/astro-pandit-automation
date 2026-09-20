@@ -16,7 +16,7 @@ from chart_visualizer import VedicGridChartVisualizer
 
 app = Flask(__name__)
 
-# --- SECURE FILE PATH FINDER (Render Secrets & Local Support) ---
+# --- SECURE FILE PATH FINDER ---
 BASE_DIR = Path(__file__).resolve().parent
 render_secret_path = Path("/etc/secrets/credentials.json")
 local_path = BASE_DIR / "credentials.json"
@@ -37,9 +37,15 @@ client = gspread.authorize(creds)
 # Google Drive API Client Setup
 drive_service = build('drive', 'v3', credentials=creds)
 
+# Tera Google Drive Folder ID yahan set kar diya hai
+DRIVE_FOLDER_ID = "1HsghCRIIp4zK880WzHTvsQMoa6g0LaCK"
+
 def upload_to_drive(file_path, file_name):
     try:
-        file_metadata = {'name': file_name}
+        file_metadata = {
+            'name': file_name,
+            'parents': [DRIVE_FOLDER_ID]
+        }
         media = MediaFileUpload(str(file_path), resumable=True)
         file = drive_service.files().create(
             body=file_metadata, media_body=media, fields='id'
@@ -47,6 +53,7 @@ def upload_to_drive(file_path, file_name):
         print(f"[DRIVE] File successfully uploaded to Google Drive! File ID: {file.get('id')}")
     except Exception as e:
         print(f"[DRIVE ERROR] Failed to upload: {e}")
+        traceback.print_exc()
 
 geolocator = Nominatim(user_agent="astro_pandit_worker")
 
@@ -66,14 +73,12 @@ def home():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     try:
-        # Google Sheet se latest row data fetch karenge
         sheet = client.open("AstroPandit").sheet1
         rows = sheet.get_all_values()
         
         if len(rows) < 2:
             return jsonify({"status": "error", "message": "No data found in sheet"}), 400
         
-        # Sabse aakhri (latest) row uthayenge jo form se aayi hai
         latest_row = rows[-1]
         
         if len(latest_row) < 5:
@@ -87,7 +92,6 @@ def webhook():
         
         print(f"\n[WEBHOOK TRIGGERED] New entry -> Name: {name}, DOB: {dob}, Time: {tob}, City: {city}")
         
-        # Smart Date & Time Parsing (with optional time handling)
         year, month, day = 1998, 10, 15
         hour, minute = 12, 0
         
@@ -103,7 +107,7 @@ def webhook():
                 parts_time = tob.split(':')
                 hour, minute = int(parts_time[0]), int(parts_time[1])
             else:
-                hour, minute = 12, 0  # Default 12 PM if time is optional/blank
+                hour, minute = 12, 0
         except Exception as parse_err:
             print(f"[PARSING WARNING] Using defaults due to: {parse_err}")
 
@@ -158,7 +162,7 @@ Instructions: Explain in simple Hinglish (conversational Hindi in English letter
         
         grid_visualizer.generate_html_grid_chart(filename=str(report_path))
         
-        # Google Drive par upload
+        # Google Drive par upload specific folder mein
         upload_to_drive(report_path, report_filename)
         
         return jsonify({"status": "success", "message": f"Report generated and uploaded for {name}!"}), 200
