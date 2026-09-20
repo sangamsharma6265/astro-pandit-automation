@@ -315,19 +315,19 @@ class VedicGridChartVisualizer:
                         <line x1="250" y1="450" x2="50" y2="250" stroke="#fbbf24" stroke-width="2"/>
                         <line x1="50" y1="250" x2="250" y2="50" stroke="#fbbf24" stroke-width="2"/>
 
-                        <!-- House Numbers -->
+                        <!-- Anticlockwise House/Rashi Numbers (North Indian Standard: Top Diamond is 1, then counter-clockwise) -->
                         <text x="250" y="75" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">1</text>
-                        <text x="110" y="75" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">12</text>
-                        <text x="75" y="145" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">11</text>
-                        <text x="75" y="255" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">10</text>
-                        <text x="75" y="365" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">9</text>
-                        <text x="110" y="435" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">8</text>
-                        <text x="250" y="435" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">7</text>
-                        <text x="390" y="435" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">6</text>
-                        <text x="425" y="365" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">5</text>
-                        <text x="425" y="255" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">4</text>
-                        <text x="425" y="145" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">3</text>
-                        <text x="390" y="75" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">2</text>
+                        <text x="140" y="55" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">2</text>
+                        <text x="75" y="115" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">3</text>
+                        <text x="130" y="210" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">4</text>
+                        <text x="75" y="310" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">5</text>
+                        <text x="140" y="385" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">6</text>
+                        <text x="250" y="330" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">7</text>
+                        <text x="360" y="385" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">8</text>
+                        <text x="425" y="310" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">9</text>
+                        <text x="370" y="210" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">10</text>
+                        <text x="425" y="115" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">11</text>
+                        <text x="360" y="55" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">12</text>
 
                         <!-- Planets -->
                         <text font-size="12" font-family="monospace" text-anchor="middle">{render_house_planets(1)}</text>

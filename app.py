@@ -53,7 +53,12 @@ def webhook():
         req_data = request.get_json() or {}
         print(f"\n[INCOMING PAYLOAD]: {req_data}")
         
-        # Sabhi possible keys ko dynamically check karne ke liye
+        # Helper to extract clean string value whether it's a list or string
+        def clean_val(val):
+            if isinstance(val, list):
+                return val[0] if val else ""
+            return str(val) if val is not None else ""
+
         name = None
         dob = None
         tob = None
@@ -61,14 +66,15 @@ def webhook():
         
         for k, v in req_data.items():
             k_lower = k.lower()
+            actual_val = clean_val(v)
             if 'name' in k_lower:
-                name = v
+                name = actual_val
             elif 'dob' in k_lower or 'birth date' in k_lower or 'date' in k_lower:
-                dob = v
+                dob = actual_val
             elif 'tob' in k_lower or 'time' in k_lower:
-                tob = v
+                tob = actual_val
             elif 'city' in k_lower or 'place' in k_lower or 'location' in k_lower:
-                city = v
+                city = actual_val
                 
         # Fallbacks agar koi field na mile
         name = name if name else "Client"
@@ -83,17 +89,28 @@ def webhook():
         
         try:
             if dob:
-                parts_date = str(dob).split('-' if '-' in str(dob) else '/')
-                if len(parts_date[0]) == 4:
-                    year, month, day = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
-                else:
-                    day, month, year = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
+                dob_str = str(dob).strip()
+                parts_date = dob_str.split('-' if '-' in dob_str else '/')
+                if len(parts_date) >= 3:
+                    if len(parts_date[0]) == 4:
+                        year, month, day = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
+                    else:
+                        day, month, year = int(parts_date[0]), int(parts_date[1]), int(parts_date[2])
             
-            if tob and ':' in str(tob):
-                parts_time = str(tob).split(':')
-                hour, minute = int(parts_time[0]), int(parts_time[1])
-            else:
-                hour, minute = 12, 0
+            if tob:
+                tob_str = str(tob).strip().upper()
+                is_pm = 'PM' in tob_str
+                is_am = 'AM' in tob_str
+                
+                time_clean = tob_str.replace('AM', '').replace('PM', '').strip()
+                parts_time = time_clean.split(':')
+                
+                if len(parts_time) >= 2:
+                    hour, minute = int(parts_time[0]), int(parts_time[1])
+                    if is_pm and hour < 12:
+                        hour += 12
+                    elif is_am and hour == 12:
+                        hour = 0
         except Exception as parse_err:
             print(f"[PARSING WARNING] Using defaults due to: {parse_err}")
 
