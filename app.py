@@ -34,14 +34,6 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 creds = ServiceAccountCredentials.from_json_keyfile_name(str(cred_path), scope)
 client = gspread.authorize(creds)
 
-# --- DIRECTLY PRINTING THE EXACT SERVICE ACCOUNT EMAIL ---
-try:
-    print("\n==================================================")
-    print(f"👉 COPY THIS EMAIL FOR DRIVE SHARING: {creds.service_account_email}")
-    print("==================================================\n")
-except Exception as e:
-    print(f"[ERROR] Could not extract service account email: {e}")
-
 # Google Drive API Client Setup
 drive_service = build('drive', 'v3', credentials=creds)
 
@@ -54,9 +46,15 @@ def upload_to_drive(file_path, file_name):
             'parents': [DRIVE_FOLDER_ID]
         }
         media = MediaFileUpload(str(file_path), resumable=True)
+        
+        # supportsAllDrives aur corporative quota fix ke liye parameters add kiye hain
         file = drive_service.files().create(
-            body=file_metadata, media_body=media, fields='id'
+            body=file_metadata,
+            media_body=media,
+            fields='id',
+            supportsAllDrives=True
         ).execute()
+        
         print(f"[DRIVE] File successfully uploaded to Google Drive! File ID: {file.get('id')}")
     except Exception as e:
         print(f"[DRIVE ERROR] Failed to upload: {e}")
