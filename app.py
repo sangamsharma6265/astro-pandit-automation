@@ -137,10 +137,10 @@ Instructions: Explain in simple Hinglish (conversational Hindi in English letter
         report_filename = f"{name.replace(' ', '_')}_Kundali_Report.html"
         report_path = BASE_DIR / report_filename
         
-        # HTML file generate kar li local flask container mein
+        # Generate HTML file locally
         grid_visualizer.generate_html_grid_chart(filename=str(report_path))
         
-        # File ka HTML content read karke response mein bhej rahe hain
+        # Read HTML content to send back to Apps Script
         with open(report_path, "r", encoding="utf-8") as f:
             html_content = f.read()
             
